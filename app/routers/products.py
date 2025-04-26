@@ -100,3 +100,44 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
 @router.post("/upload-csv")
 def upload_csv(file: UploadFile, db: Session = Depends(get_db)):
     return csv_importer.import_products_csv(file, db)
+
+# Category Routes
+
+@router.put("/categories/{category_id}/discount")
+def update_category_discount(category_id: int, discount_percentage: float, db: Session = Depends(get_db)):
+    category = db.query(models.Category).filter(models.Category.id == category_id).first()
+    if not category:
+        raise HTTPException(status_code=404, detail="Categoria não encontrada")
+
+    category.discount_percentage = discount_percentage
+
+    update_product_prices(db, category_id)
+
+    db.commit()
+    return {"message": "Desconto atualizado com sucesso"}
+
+def update_product_prices(db: Session, category_id: int):
+    category = db.query(models.Category).filter(models.Category.id == category_id).first()
+    if not category:
+        return None
+
+    products = db.query(models.Product).filter(models.Product.category_id == category_id).all()
+
+    for product in products:
+        discount_amount = product.price * (category.discount_percentage / 100)
+        product.price -= discount_amount
+
+        add_price_history(db, product.id, product.price)
+
+    db.commit()
+
+def add_price_history(db: Session, product_id: int, new_price: float, reason: str = None):
+    price_history = models.PriceHistory(
+        product_id=product_id,
+        price=new_price,
+        reason=reason
+    )
+    db.add(price_history)
+    db.commit()
+    db.refresh(price_history)
+    return price_history

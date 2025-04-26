@@ -21,6 +21,7 @@ class CategoryBase(BaseModel):
     description: str
     price: float
     brand: str
+    discount_percentage: float
 
 class CategoryCreate(CategoryBase):
     pass
@@ -102,3 +103,17 @@ class LoginRequest(BaseModel):
         if not self.username and not self.email:
             raise ValueError('Você deve fornecer username ou email para login.')
         return self
+    
+# Price History
+
+class PriceHistoryBase(BaseModel):
+    product_id: int
+    price: float
+    date: datetime
+    reason: Optional[str] = None
+
+class PriceHistory(PriceHistoryBase):
+    id: int
+
+    class Config:
+        orm_mode = True

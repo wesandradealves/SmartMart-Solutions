@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import products, categories, sales, export, users
+from app.routers import products, categories, sales, export, users, price_history
 from fastapi.middleware.cors import CORSMiddleware
 
 tags_metadata = [
@@ -14,6 +14,18 @@ tags_metadata = [
     {
         "name": "sales",
         "description": "Operações relacionadas às vendas",
+    },
+    {
+        "name": "export",
+        "description": "Operações relacionadas à exportação de dados",
+    },
+    {
+        "name": "users",
+        "description": "Operações relacionadas à autenticação e gerenciamento de usuários",
+    },
+    {
+        "name": "price-history",
+        "description": "Operações relacionadas à histórico de preços dos produtos",
     },
 ]
 
@@ -36,3 +48,5 @@ app.include_router(categories.router)
 app.include_router(sales.router)
 app.include_router(export.router)
 app.include_router(users.router)
+app.include_router(price_history.router)
+
