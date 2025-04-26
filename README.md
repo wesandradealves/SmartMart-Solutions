@@ -325,7 +325,7 @@ A API possui os seguintes endpoints principais:
 - **Exemplo de chamada**:
 
   ```http
-  GET /sales/profit/total?days=365&product_id=1
+  GET /sales/profit/total?days=30&product_id=12
   ```
 
   ```json
