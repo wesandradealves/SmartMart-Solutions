@@ -3,10 +3,11 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import models
 from app.schemas import schemas
+from typing import List  
 
 router = APIRouter(prefix="/price-history", tags=["price-history"])
 
-@router.get("/{product_id}", response_model=schemas.PriceHistory)
+@router.get("/{product_id}", response_model=List[schemas.PriceHistory])  
 def get_price_history(product_id: int, db: Session = Depends(get_db)):
     price_history = db.query(models.PriceHistory).filter(models.PriceHistory.product_id == product_id).all()
     if not price_history:

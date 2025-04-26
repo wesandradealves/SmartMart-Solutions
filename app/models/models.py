@@ -22,7 +22,6 @@ class Product(Base):
     price = Column(Float)
     category_id = Column(Integer, ForeignKey("categories.id"))
     brand = Column(String)
-    # category = relationship("Category")
     category = relationship("Category", back_populates="products")
     price_history = relationship("PriceHistory", back_populates="product")
     
