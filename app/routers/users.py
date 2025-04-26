@@ -31,7 +31,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.refresh(db_user)
     return db_user
 
-@router.get("", response_model=PaginatedResponse[schemas.UserWithPassword])
+@router.get("", response_model=PaginatedResponse[schemas.User])
 def get_users(
     db: Session = Depends(get_db),
     sort: str = Query("asc", enum=["asc", "desc"]),
@@ -54,7 +54,13 @@ def get_users(
 
     users, total = paginate(query, skip, limit)
 
+    for user in users:
+        user.hashed_password = user.password  
+        delattr(user, 'password') 
+
     return PaginatedResponse(items=users, total=total)
+
+
 
 @router.put("/{user_id}")
 def update_user(user_id: int, updated_user: schemas.UserUpdate, db: Session = Depends(get_db)):
