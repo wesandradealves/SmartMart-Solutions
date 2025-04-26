@@ -43,8 +43,6 @@ def get_products(
         total=total
     )
 
-
-
 @router.post("", response_model=schemas.Product)
 def create_product(product: schemas.ProductBase, db: Session = Depends(get_db)):
     normalized_name = product.name.strip().lower()
@@ -101,10 +99,25 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
 def upload_csv(file: UploadFile, db: Session = Depends(get_db)):
     return csv_importer.import_products_csv(file, db)
 
-# Category Routes
+# @router.put("/categories/{category_id}/discount")
+# def update_category_discount(category_id: int, discount_percentage: float, db: Session = Depends(get_db)):
+#     category = db.query(models.Category).filter(models.Category.id == category_id).first()
+#     if not category:
+#         raise HTTPException(status_code=404, detail="Categoria não encontrada")
+
+#     category.discount_percentage = discount_percentage
+
+#     update_product_prices(db, category_id)
+
+#     db.commit()
+#     return {"message": "Desconto atualizado com sucesso"}
 
 @router.put("/categories/{category_id}/discount")
-def update_category_discount(category_id: int, discount_percentage: float, db: Session = Depends(get_db)):
+def update_category_discount(
+    category_id: int,
+    discount_percentage: float,
+    db: Session = Depends(get_db)
+):
     category = db.query(models.Category).filter(models.Category.id == category_id).first()
     if not category:
         raise HTTPException(status_code=404, detail="Categoria não encontrada")
@@ -113,8 +126,25 @@ def update_category_discount(category_id: int, discount_percentage: float, db: S
 
     update_product_prices(db, category_id)
 
+    products = db.query(models.Product).filter(models.Product.category_id == category_id).all()
+
     db.commit()
-    return {"message": "Desconto atualizado com sucesso"}
+
+    return {
+        "message": "Desconto atualizado com sucesso",
+        "discount_percentage": discount_percentage,
+        "category_id": category_id,
+        "updated_products": [
+            {
+                "product_id": product.id,
+                "name": product.name,
+                "price": product.price,
+                "category_id": product.category_id
+            }
+            for product in products
+        ]
+    }
+
 
 def update_product_prices(db: Session, category_id: int):
     category = db.query(models.Category).filter(models.Category.id == category_id).first()
