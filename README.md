@@ -193,6 +193,62 @@ A API possui os seguintes endpoints principais:
 - **DELETE** `/products/{product_id}` - Deleta um produto.
 - **POST** `/products/upload-csv` - Faz upload de um arquivo CSV para importar produtos.
 
+## Price History
+
+- **Endpoint**: `/products/{product_id}/price-history`
+- **Método**: `GET`
+- **Descrição**: Retorna o histórico de preços de um produto específico.
+- **Parâmetros de Path**:
+  - `product_id`: ID do produto para o qual o histórico de preços será recuperado.
+- **Resposta**:
+  - **Status Code**: 200 OK
+  - **Corpo**:
+    ```json
+    {
+      "product_id": 7,
+      "price_history": [
+        {
+          "price": 1999.99,
+          "date": "2024-01-01T00:00:00"
+        },
+        {
+          "price": 1799.99,
+          "date": "2024-03-01T00:00:00"
+        },
+        {
+          "price": 1699.99,
+          "date": "2024-05-01T00:00:00"
+        }
+      ]
+    }
+    ```
+  - **Descrição**: Retorna um histórico de preços com o preço do produto e as respectivas datas de atualização.
+  
+---
+
+## Atualizar Desconto de Categoria
+
+- **Endpoint**: `/categories/{category_id}/discount`
+- **Método**: `PUT`
+- **Descrição**: Atualiza o desconto de uma categoria específica.
+- **Parâmetros de Path**:
+  - `category_id`: ID da categoria a ser atualizada.
+- **Parâmetros de Corpo**:
+  - `discount_percentage` (float): Novo valor de desconto para a categoria (ex: 10.5 para 10,5% de desconto).
+- **Resposta**:
+  - **Status Code**: 200 OK
+  - **Corpo**:
+    ```json
+    {
+      "id": 3,
+      "name": "Laptops",
+      "description": "Laptops de alto desempenho",
+      "discount_percentage": 10.5
+    }
+    ```
+  - **Descrição**: Retorna os dados da categoria atualizada com o novo valor de desconto.
+
+
 ### Categorias
 
 - **GET** `/categories` - Lista todas as categorias.
@@ -203,81 +259,41 @@ A API possui os seguintes endpoints principais:
     - `page_size`: Número de itens por página (padrão: 10).
   - **Resposta:**
     ```json
-    {
-      "items": [
-        {
-          "name": "Dell XPS 15",
-          "description": "15.6-inch touchscreen laptop with Intel i9 and 32GB RAM",
-          "price": 1999.99,
-          "brand": "Dell",
-          "id": 7
-        },
-        {
-          "name": "GE Profile Smart Microwave",
-          "description": "1.7 cu. ft. convection microwave with scan-to-cook technology",
-          "price": 349.99,
-          "brand": "GE",
-          "id": 11
-        },
-        {
-          "name": "Google Pixel 6 Pro",
-          "description": "6.7-inch LTPO OLED with Google Tensor processor and 50MP camera",
-          "price": 899.99,
-          "brand": "Google",
-          "id": 15
-        },
-        {
-          "name": "LG French Door Refrigerator",
-          "description": "26.2 cu. ft. smart refrigerator with ice maker and door-in-door",
-          "price": 2199.99,
-          "brand": "LG",
-          "id": 4
-        },
-        {
-          "name": "LG OLED55C1",
-          "description": "55-inch OLED 4K Smart TV with AI ThinQ and G-Sync compatibility",
-          "price": 1499.99,
-          "brand": "LG",
-          "id": 2
-        },
-        {
-          "name": "Lenovo ThinkPad X1",
-          "description": "14-inch business laptop with Intel i7 and 16GB RAM",
-          "price": 1699.99,
-          "brand": "Lenovo",
-          "id": 9
-        },
-        {
-          "name": "MacBook Pro 16",
-          "description": "16-inch laptop with M1 Pro chip and 16GB unified memory",
-          "price": 2499.99,
-          "brand": "Apple",
-          "id": 8
-        },
-        {
-          "name": "Panasonic Countertop Microwave",
-          "description": "1.3 cu. ft. 1100W microwave with inverter technology",
-          "price": 179.99,
-          "brand": "Panasonic",
-          "id": 10
-        },
-        {
-          "name": "Samsung 65\" QLED TV",
-          "description": "65-inch 4K Smart TV with HDR and quantum dot technology",
-          "price": 1299.99,
-          "brand": "Samsung",
-          "id": 1
-        },
-        {
-          "name": "Samsung Countertop Microwave",
-          "description": "1.1 cu. ft. microwave with sensor cooking",
-          "price": 159.99,
-          "brand": "Samsung",
-          "id": 12
-        }
-      ],
-      "total": 15
-    }
+      {
+          "items": [
+              {
+                  "name": "Laptops",
+                  "description": "Laptops de alto desempenho",
+                  "discount_percentage": 0.0,
+                  "id": 3
+              },
+              {
+                  "name": "Micro-ondas",
+                  "description": "Micro-ondas para cozinha inteligente",
+                  "discount_percentage": 12.0,
+                  "id": 4
+              },
+              {
+                  "name": "Refrigeradores",
+                  "description": "Refrigeradores de última geração",
+                  "discount_percentage": 0.0,
+                  "id": 2
+              },
+              {
+                  "name": "Smartphones",
+                  "description": "Smartphones com tecnologia avançada",
+                  "discount_percentage": 0.0,
+                  "id": 5
+              },
+              {
+                  "name": "Televisores",
+                  "description": "TVs de alta definição e tecnologia avançada",
+                  "discount_percentage": 0.0,
+                  "id": 1
+              }
+          ],
+          "total": 5
+      }
     ```
 
 - **POST** `/categories` - Cria uma nova categoria.
