@@ -1,4 +1,3 @@
-
 # SmartMart Backend API
 
 API para gerenciamento interno de produtos, categorias e vendas da SmartMart Solutions.
@@ -33,7 +32,7 @@ cd smartmart-backend-v4
 ```bash
 python -m venv venv
 source venv/bin/activate  # Para Linux/macOS
-venv\Scriptsctivate     # Para Windows
+venv\Scripts\activate   # Para Windows
 ```
 
 ### 3. Instalando dependências
@@ -88,10 +87,22 @@ A API possui os seguintes endpoints principais:
 
 - **GET** `/products` - Lista todos os produtos.
   - **Query parameters:**
-    - `category`: Filtra os produtos pela categoria.
+    - `category_id`: Filtra os produtos pela categoria.
     - `title`: Filtra os produtos pelo título (nome).
-    - `sort`: Ordena os resultados. Use `asc` para ordem crescente e `desc` para ordem decrescente.
-  
+    - `sort`: Ordena os resultados. Valores: `asc` ou `desc`.
+    - `sort_by`: Escolhe o campo para ordenar. Valores: `name`, `category_id`, `brand`, `price`.
+    - `page`: Número da página (padrão: 1).
+    - `page_size`: Número de itens por página (padrão: 10).
+  - **Resposta:**
+    ```json
+    {
+      "total": 50,
+      "page": 1,
+      "page_size": 10,
+      "items": [...]
+    }
+    ```
+
 - **POST** `/products` - Cria um novo produto.
 - **PUT** `/products/{product_id}` - Atualiza um produto existente.
 - **DELETE** `/products/{product_id}` - Deleta um produto.
@@ -100,6 +111,21 @@ A API possui os seguintes endpoints principais:
 ### Categorias
 
 - **GET** `/categories` - Lista todas as categorias.
+  - **Query parameters:**
+    - `sort_by`: Campo para ordenação (`id` ou `name`).
+    - `sort_order`: Direção da ordenação (`asc` ou `desc`).
+    - `page`: Número da página (padrão: 1).
+    - `page_size`: Número de itens por página (padrão: 10).
+  - **Resposta:**
+    ```json
+    {
+      "total": 10,
+      "page": 1,
+      "page_size": 10,
+      "items": [...]
+    }
+    ```
+
 - **POST** `/categories` - Cria uma nova categoria.
 - **PUT** `/categories/{category_id}` - Atualiza uma categoria existente.
 - **DELETE** `/categories/{category_id}` - Deleta uma categoria.
@@ -107,6 +133,21 @@ A API possui os seguintes endpoints principais:
 ### Vendas
 
 - **GET** `/sales` - Lista todas as vendas, incluindo o cálculo de lucro.
+  - **Query parameters:**
+    - `sort_by`: Campo para ordenação (`total_price` ou `profit`).
+    - `sort_order`: Direção da ordenação (`asc` ou `desc`).
+    - `page`: Número da página (padrão: 1).
+    - `page_size`: Número de itens por página (padrão: 10).
+  - **Resposta:**
+    ```json
+    {
+      "total": 30,
+      "page": 1,
+      "page_size": 10,
+      "items": [...]
+    }
+    ```
+
 - **POST** `/sales` - Cria uma nova venda.
 - **PUT** `/sales/{sale_id}` - Atualiza uma venda existente.
 - **DELETE** `/sales/{sale_id}` - Deleta uma venda.

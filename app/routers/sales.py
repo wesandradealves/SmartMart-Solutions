@@ -6,6 +6,8 @@ from app.models import models
 from app.schemas import schemas
 from app.utils.profit import calculate_profit
 from app.database import get_db
+from app.utils.pagination import paginate
+from app.schemas.schemas import PaginatedResponse
 
 router = APIRouter(prefix="/sales", tags=["sales"])
 
@@ -16,35 +18,16 @@ def get_db():
     finally:
         db.close()
 
-# @router.get("", response_model=list[schemas.SaleWithProfit])
-# def get_sales(
-#     db: Session = Depends(get_db),
-#     sort_by: str = "total_price",  
-#     sort_order: str = "asc" 
-# ):
-#     if sort_order == "desc":
-#         sort_direction = desc
-#     else:
-#         sort_direction = asc
-
-#     sales = db.query(models.Sale).all()
-
-#     sales_with_profit = [calculate_profit(sale) for sale in sales]
-
-#     if sort_by == "profit":
-#         sales_with_profit.sort(key=lambda x: x.profit, reverse=(sort_order == "desc"))
-#     elif sort_by == "total_price":
-#         sales_with_profit.sort(key=lambda x: x.total_price, reverse=(sort_order == "desc"))
-
-#     return sales_with_profit
-
-@router.get("", response_model=list[schemas.SaleWithProfit])
+@router.get("", response_model=PaginatedResponse[schemas.SaleWithProfit])
 def get_sales(
     db: Session = Depends(get_db),
     sort_by: str = Query("total_price", enum=["total_price", "profit"]),
-    sort_order: str = Query("asc", enum=["asc", "desc"])
+    sort_order: str = Query("asc", enum=["asc", "desc"]),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(10, ge=1)
 ):
-    sales = db.query(models.Sale).all()
+    sales = db.query(models.Sale)
+    sales = sales.all()
     sales_with_profit = [calculate_profit(sale) for sale in sales]
 
     if sort_by == "profit":
@@ -52,7 +35,15 @@ def get_sales(
     else:
         sales_with_profit.sort(key=lambda x: x.total_price, reverse=(sort_order == "desc"))
 
-    return sales_with_profit
+    total = len(sales_with_profit)
+    items = sales_with_profit[skip:skip+limit]
+
+    return PaginatedResponse(
+        items=items,
+        total=total
+    )
+
+
 
 @router.post("/", response_model=schemas.Sale)
 def create_sale(sale: schemas.SaleCreate, db: Session = Depends(get_db)):
