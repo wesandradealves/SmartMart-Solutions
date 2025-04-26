@@ -170,8 +170,31 @@ A API possui os seguintes endpoints principais:
 ### **Serviço de cálculo de lucro total**:
 - **Endpoint**: `/sales/profit/total`
 - **Método**: `GET`
-- **Query Parameter**:
+- **Query Parameters**:
   - `days`: Número de dias para considerar o cálculo do lucro (padrão: 365).
+  - `product_id`: ID do produto para filtrar as vendas (opcional).
+
+- **Exemplo de chamada**:
+
+  ```http
+  GET /sales?sort_by=profit&sort_order=desc&days=30&skip=0&limit=10
+  ```
+
+  ```json
+    {
+      "items": [
+        {
+          "id": 1,
+          "product_id": 2,
+          "quantity": 5,
+          "total_price": 500.0,
+          "date": "2024-04-25T00:00:00",
+          "profit": 100.0
+        }
+      ],
+      "total": 23
+    }
+  ```
 
 ### Exportação de Dados
 
