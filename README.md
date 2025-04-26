@@ -236,7 +236,7 @@ A API possui os seguintes endpoints principais:
 
 ## Atualizar Desconto de Categoria
 
-- **Endpoint**: `/categories/{category_id}/discount`
+- **Endpoint**: `/products/categories/{category_id}/discount`
 - **Método**: `PUT`
 - **Descrição**: Atualiza o desconto de uma categoria específica.
 - **Parâmetros de Path**:
@@ -246,13 +246,38 @@ A API possui os seguintes endpoints principais:
 - **Resposta**:
   - **Status Code**: 200 OK
   - **Corpo**:
+    ```bash
+      curl -X 'PUT' \
+        'http://localhost:8000/products/categories/4/discount?discount_percentage=5.0' \
+        -H 'accept: application/json'
+    ```
+
     ```json
-    {
-      "id": 3,
-      "name": "Laptops",
-      "description": "Laptops de alto desempenho",
-      "discount_percentage": 10.5
-    }
+      {
+        "message": "Desconto atualizado com sucesso",
+        "discount_percentage": 5,
+        "category_id": 4,
+        "updated_products": [
+          {
+            "product_id": 10,
+            "name": "Panasonic Countertop Microwave",
+            "price": 112.85373,
+            "category_id": 4
+          },
+          {
+            "product_id": 11,
+            "name": "GE Profile Smart Microwave",
+            "price": 219.44373000000002,
+            "category_id": 4
+          },
+          {
+            "product_id": 12,
+            "name": "Samsung Countertop Microwave",
+            "price": 100.31373,
+            "category_id": 4
+          }
+        ]
+      }
     ```
   - **Descrição**: Retorna os dados da categoria atualizada com o novo valor de desconto.
 
