@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, model_validator 
 from typing import Optional, Generic, TypeVar, List
 from datetime import datetime
 from enum import Enum  
@@ -91,3 +91,14 @@ class User(UserBase):
     hashed_password: str
     class Config:
         from_attributes = True
+        
+class LoginRequest(BaseModel):
+    username: Optional[str] = None
+    email: Optional[str] = None
+    password: str
+
+    @model_validator(mode='after')
+    def check_username_or_email(self) -> 'LoginRequest':
+        if not self.username and not self.email:
+            raise ValueError('Você deve fornecer username ou email para login.')
+        return self
