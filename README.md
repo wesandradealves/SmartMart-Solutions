@@ -193,36 +193,44 @@ A API possui os seguintes endpoints principais:
 - **DELETE** `/products/{product_id}` - Deleta um produto.
 - **POST** `/products/upload-csv` - Faz upload de um arquivo CSV para importar produtos.
 
-## Price History
+## Histórico de Preços
 
-- **Endpoint**: `/products/{product_id}/price-history`
+- **Endpoint**: `/price-history/{product_id}`
 - **Método**: `GET`
-- **Descrição**: Retorna o histórico de preços de um produto específico.
+- **Descrição**: Retorna o histórico de preços de um produto específico, com suporte a ordenação por data ou preço.
 - **Parâmetros de Path**:
   - `product_id`: ID do produto para o qual o histórico de preços será recuperado.
+- **Parâmetros de Query**:
+  - `sort` (opcional): Ordena os resultados. Valores possíveis: `asc` (ascendente) ou `desc` (descendente). O padrão é `asc`.
+  - `sort_by` (opcional): Campo para ordenar os resultados. Valores possíveis: `date` ou `price`. O padrão é `date`.
 - **Resposta**:
   - **Status Code**: 200 OK
   - **Corpo**:
     ```json
-    {
-      "product_id": 7,
-      "price_history": [
-        {
-          "price": 1999.99,
-          "date": "2024-01-01T00:00:00"
-        },
-        {
-          "price": 1799.99,
-          "date": "2024-03-01T00:00:00"
-        },
-        {
-          "price": 1699.99,
-          "date": "2024-05-01T00:00:00"
-        }
-      ]
-    }
+    [
+      {
+        "price": 1999.99,
+        "date": "2024-01-01T00:00:00"
+      },
+      {
+        "price": 1799.99,
+        "date": "2024-03-01T00:00:00"
+      },
+      {
+        "price": 1699.99,
+        "date": "2024-05-01T00:00:00"
+      }
+    ]
     ```
-  - **Descrição**: Retorna um histórico de preços com o preço do produto e as respectivas datas de atualização.
+  - **Descrição**: Retorna uma lista do histórico de preços, ordenada conforme os parâmetros `sort` e `sort_by`. O histórico inclui o preço e a data da alteração do preço.
+
+---
+
+### Exemplos de chamadas
+
+1. **Ordenação por data (padrão - ascendente)**:
+   ```http
+   GET /price-history/7?sort=asc&sort_by=date
   
 ---
 
