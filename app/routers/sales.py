@@ -38,7 +38,7 @@ router = APIRouter(prefix="/sales", tags=["sales"])
 @router.get("", response_model=PaginatedResponse[schemas.SaleWithProfit])
 def get_sales(
     db: Session = Depends(get_db),
-    sort_by: str = Query("total_price", enum=["total_price", "profit"]),
+    sort_by: str = Query("total_price", enum=["total_price", "profit", "date"]),
     sort_order: str = Query("asc", enum=["asc", "desc"]),
     days: int = Query(365, ge=1, description="Número de dias para considerar (padrão: últimos 365 dias)"),
     skip: int = Query(0, ge=0),
@@ -52,6 +52,8 @@ def get_sales(
 
     if sort_by == "profit":
         sales_with_profit.sort(key=lambda x: x.profit, reverse=(sort_order == "desc"))
+    elif sort_by == "date":
+        sales_with_profit.sort(key=lambda x: x.date, reverse=(sort_order == "desc"))
     else:
         sales_with_profit.sort(key=lambda x: x.total_price, reverse=(sort_order == "desc"))
 
