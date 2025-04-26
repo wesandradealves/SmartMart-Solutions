@@ -325,43 +325,46 @@ A API possui os seguintes endpoints principais:
 - **Exemplo de chamada**:
 
   ```http
-  GET /sales/profit/total?days=365&product_id=1
+  GET /sales/profit/total?days=30&product_id=12
   ```
 
   ```json
     {
-      "total_profit": 11699.91,
+      "total_profit": 2750.846,
+      "days": 30,
+      "name": "Produto Exemplo",  
       "sales": [
         {
-          "product_id": 1,
-          "quantity": 12,
-          "total_price": 15599.88,
-          "date": "2025-01-15T00:00:00",
-          "profit": 3119.976
+          "product_id": 12,
+          "quantity": 13,
+          "total_price": 2079.87,
+          "date": "2025-09-08T00:00:00",
+          "profit": 415.974
         },
         {
-          "product_id": 1,
-          "quantity": 8,
-          "total_price": 10399.92,
-          "date": "2025-03-22T00:00:00",
-          "profit": 2079.984
-        },
-        {
-          "product_id": 1,
+          "product_id": 12,
           "quantity": 15,
-          "total_price": 19499.85,
-          "date": "2025-07-05T00:00:00",
-          "profit": 3899.97
+          "total_price": 2399.85,
+          "date": "2025-03-15T00:00:00",
+          "profit": 479.97
         },
         {
-          "product_id": 1,
-          "quantity": 10,
-          "total_price": 12999.9,
-          "date": "2025-10-18T00:00:00",
-          "profit": 2599.98
+          "product_id": 12,
+          "quantity": 18,
+          "total_price": 2879.82,
+          "date": "2025-11-22T00:00:00",
+          "profit": 575.964
+        },
+        {
+          "product_id": 12,
+          "quantity": 22,
+          "total_price": 3519.78,
+          "date": "2025-06-10T00:00:00",
+          "profit": 703.956
         }
       ]
     }
+
   ```
 
   ```http
