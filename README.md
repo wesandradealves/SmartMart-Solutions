@@ -102,10 +102,89 @@ A API possui os seguintes endpoints principais:
   - **Resposta:**
     ```json
     {
-      "total": 50,
-      "page": 1,
-      "page_size": 10,
-      "items": [...]
+      "items": [
+        {
+          "name": "Dell XPS 15",
+          "description": "15.6-inch touchscreen laptop with Intel i9 and 32GB RAM",
+          "price": 1999.99,
+          "category_id": 3,
+          "brand": "Dell",
+          "id": 7
+        },
+        {
+          "name": "GE Profile Smart Microwave",
+          "description": "1.7 cu. ft. convection microwave with scan-to-cook technology",
+          "price": 349.99,
+          "category_id": 4,
+          "brand": "GE",
+          "id": 11
+        },
+        {
+          "name": "Google Pixel 6 Pro",
+          "description": "6.7-inch LTPO OLED with Google Tensor processor and 50MP camera",
+          "price": 899.99,
+          "category_id": 5,
+          "brand": "Google",
+          "id": 15
+        },
+        {
+          "name": "LG French Door Refrigerator",
+          "description": "26.2 cu. ft. smart refrigerator with ice maker and door-in-door",
+          "price": 2199.99,
+          "category_id": 2,
+          "brand": "LG",
+          "id": 4
+        },
+        {
+          "name": "LG OLED55C1",
+          "description": "55-inch OLED 4K Smart TV with AI ThinQ and G-Sync compatibility",
+          "price": 1499.99,
+          "category_id": 1,
+          "brand": "LG",
+          "id": 2
+        },
+        {
+          "name": "Lenovo ThinkPad X1",
+          "description": "14-inch business laptop with Intel i7 and 16GB RAM",
+          "price": 1699.99,
+          "category_id": 3,
+          "brand": "Lenovo",
+          "id": 9
+        },
+        {
+          "name": "MacBook Pro 16",
+          "description": "16-inch laptop with M1 Pro chip and 16GB unified memory",
+          "price": 2499.99,
+          "category_id": 3,
+          "brand": "Apple",
+          "id": 8
+        },
+        {
+          "name": "Panasonic Countertop Microwave",
+          "description": "1.3 cu. ft. 1100W microwave with inverter technology",
+          "price": 179.99,
+          "category_id": 4,
+          "brand": "Panasonic",
+          "id": 10
+        },
+        {
+          "name": "Samsung 65\" QLED TV",
+          "description": "65-inch 4K Smart TV with HDR and quantum dot technology",
+          "price": 1299.99,
+          "category_id": 1,
+          "brand": "Samsung",
+          "id": 1
+        },
+        {
+          "name": "Samsung Countertop Microwave",
+          "description": "1.1 cu. ft. microwave with sensor cooking",
+          "price": 159.99,
+          "category_id": 4,
+          "brand": "Samsung",
+          "id": 12
+        }
+      ],
+      "total": 16
     }
     ```
 
@@ -125,10 +204,79 @@ A API possui os seguintes endpoints principais:
   - **Resposta:**
     ```json
     {
-      "total": 10,
-      "page": 1,
-      "page_size": 10,
-      "items": [...]
+      "items": [
+        {
+          "name": "Dell XPS 15",
+          "description": "15.6-inch touchscreen laptop with Intel i9 and 32GB RAM",
+          "price": 1999.99,
+          "brand": "Dell",
+          "id": 7
+        },
+        {
+          "name": "GE Profile Smart Microwave",
+          "description": "1.7 cu. ft. convection microwave with scan-to-cook technology",
+          "price": 349.99,
+          "brand": "GE",
+          "id": 11
+        },
+        {
+          "name": "Google Pixel 6 Pro",
+          "description": "6.7-inch LTPO OLED with Google Tensor processor and 50MP camera",
+          "price": 899.99,
+          "brand": "Google",
+          "id": 15
+        },
+        {
+          "name": "LG French Door Refrigerator",
+          "description": "26.2 cu. ft. smart refrigerator with ice maker and door-in-door",
+          "price": 2199.99,
+          "brand": "LG",
+          "id": 4
+        },
+        {
+          "name": "LG OLED55C1",
+          "description": "55-inch OLED 4K Smart TV with AI ThinQ and G-Sync compatibility",
+          "price": 1499.99,
+          "brand": "LG",
+          "id": 2
+        },
+        {
+          "name": "Lenovo ThinkPad X1",
+          "description": "14-inch business laptop with Intel i7 and 16GB RAM",
+          "price": 1699.99,
+          "brand": "Lenovo",
+          "id": 9
+        },
+        {
+          "name": "MacBook Pro 16",
+          "description": "16-inch laptop with M1 Pro chip and 16GB unified memory",
+          "price": 2499.99,
+          "brand": "Apple",
+          "id": 8
+        },
+        {
+          "name": "Panasonic Countertop Microwave",
+          "description": "1.3 cu. ft. 1100W microwave with inverter technology",
+          "price": 179.99,
+          "brand": "Panasonic",
+          "id": 10
+        },
+        {
+          "name": "Samsung 65\" QLED TV",
+          "description": "65-inch 4K Smart TV with HDR and quantum dot technology",
+          "price": 1299.99,
+          "brand": "Samsung",
+          "id": 1
+        },
+        {
+          "name": "Samsung Countertop Microwave",
+          "description": "1.1 cu. ft. microwave with sensor cooking",
+          "price": 159.99,
+          "brand": "Samsung",
+          "id": 12
+        }
+      ],
+      "total": 15
     }
     ```
 
