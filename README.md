@@ -140,17 +140,26 @@ A API possui os seguintes endpoints principais:
 
 - **GET** `/sales` - Lista todas as vendas, incluindo o cálculo de lucro.
   - **Query parameters:**
-    - `sort_by`: Campo para ordenação (`total_price` ou `profit`).
-    - `sort_order`: Direção da ordenação (`asc` ou `desc`).
-    - `page`: Número da página (padrão: 1).
-    - `page_size`: Número de itens por página (padrão: 10).
+    - `sort_by`: `"total_price"` ou `"profit"` (padrão: `"total_price"`)
+    - `sort_order`: `"asc"` ou `"desc"` (padrão: `"asc"`)
+    - `days`: Número de dias retroativos para filtrar as vendas (padrão: `365` dias)
+    - `skip`: Número de registros para pular (paginação)
+    - `limit`: Quantidade máxima de registros para retornar
   - **Resposta:**
+  - GET /sales?sort_by=profit&sort_order=desc&days=30&skip=0&limit=10
     ```json
     {
-      "total": 30,
-      "page": 1,
-      "page_size": 10,
-      "items": [...]
+      "items": [
+        {
+          "id": 1,
+          "product_id": 2,
+          "quantity": 5,
+          "total_price": 500.0,
+          "date": "2024-04-25T00:00:00",
+          "profit": 100.0
+        }
+      ],
+      "total": 23
     }
     ```
 
