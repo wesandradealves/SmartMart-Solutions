@@ -195,6 +195,17 @@ A API possui os seguintes endpoints principais:
 - **PUT** `/users/{user_id}` - Atualiza um usuário existente.
 - **DELETE** `/users/{user_id}` - Deleta um usuário.
 
+## 🔐 Autenticação
+
+- POST /users/login: Envia username ou email + password, recebe token de sessão.
+- POST /users/logout: Termina a sessão.
+- O token é armazenado como cookie session_token (HTTP-only) para segurança.
+
+## 🛡️ Segurança
+
+- Senhas são armazenadas de forma segura usando bcrypt.
+- Tokens de sessão são gerados com itsdangerous e têm tempo de expiração (1h).
+
 ## Estrutura de Arquivos
 
 ```plaintext
