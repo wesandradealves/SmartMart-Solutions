@@ -15,11 +15,6 @@ def get_db():
     finally:
         db.close()
 
-# @router.get("", response_model=list[schemas.SaleWithProfit])
-# def get_sales(db: Session = Depends(get_db)):
-#     sales = db.query(models.Sale).all()
-#     return [calculate_profit(sale, db) for sale in sales]
-
 @router.get("", response_model=list[schemas.SaleWithProfit])
 def get_sales(db: Session = Depends(get_db)):
     sales = db.query(models.Sale).all()
