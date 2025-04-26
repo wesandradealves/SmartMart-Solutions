@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import asc, desc
-from app.database import SessionLocal
 from app.models import models
 from app.schemas import schemas
 from app.utils.profit import calculate_profit
@@ -10,13 +9,6 @@ from app.utils.pagination import paginate
 from app.schemas.schemas import PaginatedResponse
 
 router = APIRouter(prefix="/sales", tags=["sales"])
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @router.get("", response_model=PaginatedResponse[schemas.SaleWithProfit])
 def get_sales(
