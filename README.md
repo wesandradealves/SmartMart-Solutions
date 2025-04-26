@@ -133,21 +133,6 @@ smartmart-backend-v4/
 └── populate_initial_data.py   # Script para popular o banco de dados
 ```
 
-## Desenvolvimento
-
-### Rodando os Testes
-
-Ainda não foram implementados testes, mas é altamente recomendado adicionar testes unitários e de integração para garantir a estabilidade da API.
-
-### Contribuindo
-
-Se você deseja contribuir para este projeto, siga as etapas:
-
-1. Fork este repositório.
-2. Crie uma nova branch para sua feature.
-3. Faça as alterações e adicione testes, se necessário.
-4. Abra um Pull Request.
-
 ## Licença
 
 Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
