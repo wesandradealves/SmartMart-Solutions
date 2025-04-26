@@ -177,22 +177,474 @@ A API possui os seguintes endpoints principais:
 - **Exemplo de chamada**:
 
   ```http
-  GET /sales?sort_by=profit&sort_order=desc&days=30&skip=0&limit=10
+  GET /sales/profit/total?days=365&product_id=1
   ```
 
   ```json
     {
-      "items": [
+      "total_profit": 11699.91,
+      "sales": [
         {
-          "id": 1,
-          "product_id": 2,
-          "quantity": 5,
-          "total_price": 500.0,
-          "date": "2024-04-25T00:00:00",
-          "profit": 100.0
+          "product_id": 1,
+          "quantity": 12,
+          "total_price": 15599.88,
+          "date": "2025-01-15T00:00:00",
+          "profit": 3119.976
+        },
+        {
+          "product_id": 1,
+          "quantity": 8,
+          "total_price": 10399.92,
+          "date": "2025-03-22T00:00:00",
+          "profit": 2079.984
+        },
+        {
+          "product_id": 1,
+          "quantity": 15,
+          "total_price": 19499.85,
+          "date": "2025-07-05T00:00:00",
+          "profit": 3899.97
+        },
+        {
+          "product_id": 1,
+          "quantity": 10,
+          "total_price": 12999.9,
+          "date": "2025-10-18T00:00:00",
+          "profit": 2599.98
         }
-      ],
-      "total": 23
+      ]
+    }
+  ```
+
+  ```http
+  GET /sales/profit/total?days=365
+  ```
+
+  ```json
+    {
+      "total_profit": 151562.662,
+      "sales": [
+        {
+          "product_id": 1,
+          "quantity": 12,
+          "total_price": 15599.88,
+          "date": "2025-01-15T00:00:00",
+          "profit": 3119.976
+        },
+        {
+          "product_id": 1,
+          "quantity": 8,
+          "total_price": 10399.92,
+          "date": "2025-03-22T00:00:00",
+          "profit": 2079.984
+        },
+        {
+          "product_id": 1,
+          "quantity": 15,
+          "total_price": 19499.85,
+          "date": "2025-07-05T00:00:00",
+          "profit": 3899.97
+        },
+        {
+          "product_id": 1,
+          "quantity": 10,
+          "total_price": 12999.9,
+          "date": "2025-10-18T00:00:00",
+          "profit": 2599.98
+        },
+        {
+          "product_id": 2,
+          "quantity": 6,
+          "total_price": 8999.94,
+          "date": "2025-02-12T00:00:00",
+          "profit": 1799.9880000000003
+        },
+        {
+          "product_id": 2,
+          "quantity": 11,
+          "total_price": 16499.89,
+          "date": "2025-05-30T00:00:00",
+          "profit": 3299.978
+        },
+        {
+          "product_id": 2,
+          "quantity": 9,
+          "total_price": 13499.91,
+          "date": "2025-09-14T00:00:00",
+          "profit": 2699.982
+        },
+        {
+          "product_id": 2,
+          "quantity": 7,
+          "total_price": 10499.93,
+          "date": "2025-12-01T00:00:00",
+          "profit": 2099.9860000000003
+        },
+        {
+          "product_id": 3,
+          "quantity": 5,
+          "total_price": 9499.95,
+          "date": "2025-01-28T00:00:00",
+          "profit": 1899.9900000000002
+        },
+        {
+          "product_id": 3,
+          "quantity": 8,
+          "total_price": 15199.92,
+          "date": "2025-04-10T00:00:00",
+          "profit": 3039.9840000000004
+        },
+        {
+          "product_id": 3,
+          "quantity": 3,
+          "total_price": 5699.97,
+          "date": "2025-08-23T00:00:00",
+          "profit": 1139.9940000000001
+        },
+        {
+          "product_id": 3,
+          "quantity": 6,
+          "total_price": 11399.94,
+          "date": "2025-11-15T00:00:00",
+          "profit": 2279.9880000000003
+        },
+        {
+          "product_id": 4,
+          "quantity": 4,
+          "total_price": 8799.96,
+          "date": "2025-02-05T00:00:00",
+          "profit": 1759.992
+        },
+        {
+          "product_id": 4,
+          "quantity": 7,
+          "total_price": 15399.93,
+          "date": "2025-06-18T00:00:00",
+          "profit": 3079.9860000000003
+        },
+        {
+          "product_id": 4,
+          "quantity": 3,
+          "total_price": 6599.97,
+          "date": "2025-09-27T00:00:00",
+          "profit": 1319.9940000000001
+        },
+        {
+          "product_id": 4,
+          "quantity": 5,
+          "total_price": 10999.95,
+          "date": "2025-12-10T00:00:00",
+          "profit": 2199.9900000000002
+        },
+        {
+          "product_id": 5,
+          "quantity": 3,
+          "total_price": 8399.97,
+          "date": "2025-03-08T00:00:00",
+          "profit": 1679.994
+        },
+        {
+          "product_id": 5,
+          "quantity": 6,
+          "total_price": 16799.94,
+          "date": "2025-05-22T00:00:00",
+          "profit": 3359.988
+        },
+        {
+          "product_id": 5,
+          "quantity": 2,
+          "total_price": 5599.98,
+          "date": "2025-08-15T00:00:00",
+          "profit": 1119.9959999999999
+        },
+        {
+          "product_id": 5,
+          "quantity": 4,
+          "total_price": 11199.96,
+          "date": "2025-11-30T00:00:00",
+          "profit": 2239.9919999999997
+        },
+        {
+          "product_id": 6,
+          "quantity": 8,
+          "total_price": 11999.92,
+          "date": "2025-01-20T00:00:00",
+          "profit": 2399.984
+        },
+        {
+          "product_id": 6,
+          "quantity": 5,
+          "total_price": 7499.95,
+          "date": "2025-04-15T00:00:00",
+          "profit": 1499.99
+        },
+        {
+          "product_id": 6,
+          "quantity": 10,
+          "total_price": 14999.9,
+          "date": "2025-07-27T00:00:00",
+          "profit": 2999.98
+        },
+        {
+          "product_id": 6,
+          "quantity": 6,
+          "total_price": 8999.94,
+          "date": "2025-10-05T00:00:00",
+          "profit": 1799.9880000000003
+        },
+        {
+          "product_id": 7,
+          "quantity": 15,
+          "total_price": 29999.85,
+          "date": "2025-02-18T00:00:00",
+          "profit": 5999.97
+        },
+        {
+          "product_id": 7,
+          "quantity": 8,
+          "total_price": 15999.92,
+          "date": "2025-05-12T00:00:00",
+          "profit": 3199.9840000000004
+        },
+        {
+          "product_id": 7,
+          "quantity": 12,
+          "total_price": 23999.88,
+          "date": "2025-09-03T00:00:00",
+          "profit": 4799.976000000001
+        },
+        {
+          "product_id": 7,
+          "quantity": 10,
+          "total_price": 19999.9,
+          "date": "2025-12-15T00:00:00",
+          "profit": 3999.9800000000005
+        },
+        {
+          "product_id": 8,
+          "quantity": 6,
+          "total_price": 14999.94,
+          "date": "2025-03-01T00:00:00",
+          "profit": 2999.9880000000003
+        },
+        {
+          "product_id": 8,
+          "quantity": 9,
+          "total_price": 22499.91,
+          "date": "2025-06-25T00:00:00",
+          "profit": 4499.982
+        },
+        {
+          "product_id": 8,
+          "quantity": 4,
+          "total_price": 9999.96,
+          "date": "2025-10-12T00:00:00",
+          "profit": 1999.992
+        },
+        {
+          "product_id": 8,
+          "quantity": 7,
+          "total_price": 17499.93,
+          "date": "2025-12-28T00:00:00",
+          "profit": 3499.9860000000003
+        },
+        {
+          "product_id": 9,
+          "quantity": 10,
+          "total_price": 16999.9,
+          "date": "2025-01-10T00:00:00",
+          "profit": 3399.9800000000005
+        },
+        {
+          "product_id": 9,
+          "quantity": 12,
+          "total_price": 20399.88,
+          "date": "2025-04-22T00:00:00",
+          "profit": 4079.9760000000006
+        },
+        {
+          "product_id": 9,
+          "quantity": 8,
+          "total_price": 13599.92,
+          "date": "2025-08-09T00:00:00",
+          "profit": 2719.9840000000004
+        },
+        {
+          "product_id": 9,
+          "quantity": 5,
+          "total_price": 8499.95,
+          "date": "2025-11-05T00:00:00",
+          "profit": 1699.9900000000002
+        },
+        {
+          "product_id": 10,
+          "quantity": 20,
+          "total_price": 3599.8,
+          "date": "2025-02-28T00:00:00",
+          "profit": 719.96
+        },
+        {
+          "product_id": 10,
+          "quantity": 15,
+          "total_price": 2699.85,
+          "date": "2025-05-17T00:00:00",
+          "profit": 539.97
+        },
+        {
+          "product_id": 10,
+          "quantity": 25,
+          "total_price": 4499.75,
+          "date": "2025-09-20T00:00:00",
+          "profit": 899.95
+        },
+        {
+          "product_id": 10,
+          "quantity": 18,
+          "total_price": 3239.82,
+          "date": "2025-12-03T00:00:00",
+          "profit": 647.964
+        },
+        {
+          "product_id": 11,
+          "quantity": 8,
+          "total_price": 2799.92,
+          "date": "2025-01-25T00:00:00",
+          "profit": 559.984
+        },
+        {
+          "product_id": 11,
+          "quantity": 12,
+          "total_price": 4199.88,
+          "date": "2025-04-30T00:00:00",
+          "profit": 839.9760000000001
+        },
+        {
+          "product_id": 11,
+          "quantity": 6,
+          "total_price": 2099.94,
+          "date": "2025-07-15T00:00:00",
+          "profit": 419.98800000000006
+        },
+        {
+          "product_id": 11,
+          "quantity": 10,
+          "total_price": 3499.9,
+          "date": "2025-10-28T00:00:00",
+          "profit": 699.98
+        },
+        {
+          "product_id": 12,
+          "quantity": 15,
+          "total_price": 2399.85,
+          "date": "2025-03-15T00:00:00",
+          "profit": 479.97
+        },
+        {
+          "product_id": 12,
+          "quantity": 22,
+          "total_price": 3519.78,
+          "date": "2025-06-10T00:00:00",
+          "profit": 703.9560000000001
+        },
+        {
+          "product_id": 12,
+          "quantity": 13,
+          "total_price": 2079.87,
+          "date": "2025-09-08T00:00:00",
+          "profit": 415.974
+        },
+        {
+          "product_id": 12,
+          "quantity": 18,
+          "total_price": 2879.82,
+          "date": "2025-11-22T00:00:00",
+          "profit": 575.964
+        },
+        {
+          "product_id": 13,
+          "quantity": 25,
+          "total_price": 27499.75,
+          "date": "2025-02-08T00:00:00",
+          "profit": 5499.950000000001
+        },
+        {
+          "product_id": 13,
+          "quantity": 30,
+          "total_price": 32999.7,
+          "date": "2025-05-25T00:00:00",
+          "profit": 6599.94
+        },
+        {
+          "product_id": 13,
+          "quantity": 18,
+          "total_price": 19799.82,
+          "date": "2025-08-30T00:00:00",
+          "profit": 3959.964
+        },
+        {
+          "product_id": 13,
+          "quantity": 22,
+          "total_price": 24199.78,
+          "date": "2025-12-20T00:00:00",
+          "profit": 4839.956
+        },
+        {
+          "product_id": 14,
+          "quantity": 12,
+          "total_price": 14399.88,
+          "date": "2025-01-05T00:00:00",
+          "profit": 2879.976
+        },
+        {
+          "product_id": 14,
+          "quantity": 15,
+          "total_price": 17999.85,
+          "date": "2025-04-18T00:00:00",
+          "profit": 3599.97
+        },
+        {
+          "product_id": 14,
+          "quantity": 10,
+          "total_price": 11999.9,
+          "date": "2025-07-22T00:00:00",
+          "profit": 2399.98
+        },
+        {
+          "product_id": 14,
+          "quantity": 8,
+          "total_price": 9599.92,
+          "date": "2025-10-15T00:00:00",
+          "profit": 1919.9840000000002
+        },
+        {
+          "product_id": 15,
+          "quantity": 20,
+          "total_price": 17999.8,
+          "date": "2025-03-10T00:00:00",
+          "profit": 3599.96
+        },
+        {
+          "product_id": 15,
+          "quantity": 15,
+          "total_price": 13499.85,
+          "date": "2025-06-22T00:00:00",
+          "profit": 2699.9700000000003
+        },
+        {
+          "product_id": 15,
+          "quantity": 25,
+          "total_price": 22499.75,
+          "date": "2025-09-15T00:00:00",
+          "profit": 4499.95
+        },
+        {
+          "product_id": 15,
+          "quantity": 18,
+          "total_price": 16199.82,
+          "date": "2025-12-05T00:00:00",
+          "profit": 3239.964
+        }
+      ]
     }
   ```
 
@@ -213,20 +665,27 @@ A API possui os seguintes endpoints principais:
     - `limit`: Número de itens por página (padrão: 10).
   - **Resposta:**
     ```json
-    {
-      "total": 5,
-      "page": 1,
-      "page_size": 10,
-      "items": [
-        {
-          "id": 1,
-          "email": "email@domain.com",
-          "username": "admin",
-          "role": "admin",
-          "created_at": "2025-04-26T14:42:25.154Z"
-        }
-      ]
-    }
+      {
+        "items": [
+          {
+            "email": "admin@smartmart.com",
+            "username": "admin",
+            "role": "admin",
+            "created_at": "2024-01-01T00:00:00",
+            "id": 1,
+            "hashed_password": "$2b$12$H/5ySs7X417HSZpUc5vvMOgiHM.9TEaXVz1uob78a.plI9DcHSOh6"
+          },
+          {
+            "email": "user@smartmart.com",
+            "username": "user",
+            "role": "viewer",
+            "created_at": "2024-01-02T00:00:00",
+            "id": 2,
+            "hashed_password": "$2b$12$n6BMpKpR6cjvhZO1toR1H.05E2ZWcrgCjiurGD6Oin1Wzh5QHkZv6"
+          }
+        ],
+        "total": 2
+      }
     ```
 
 - **POST** `/users` - Cria um novo usuário.
