@@ -14,10 +14,6 @@ def get_db():
     finally:
         db.close()
 
-# @router.get("", response_model=list[schemas.Category])
-# def get_categories(db: Session = Depends(get_db)):
-#     return db.query(models.Category).all()
-
 @router.get("", response_model=list[schemas.Category])
 def get_categories(
     db: Session = Depends(get_db),
