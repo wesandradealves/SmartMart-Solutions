@@ -91,3 +91,6 @@ class User(UserBase):
 
     class Config:
         from_attributes = True
+        
+class UserWithPassword(UserBase):
+    hashed_password: str

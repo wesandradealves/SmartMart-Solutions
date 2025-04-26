@@ -31,7 +31,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.refresh(db_user)
     return db_user
 
-@router.get("", response_model=PaginatedResponse[schemas.User])
+@router.get("", response_model=PaginatedResponse[schemas.UserWithPassword])
 def get_users(
     db: Session = Depends(get_db),
     sort: str = Query("asc", enum=["asc", "desc"]),
