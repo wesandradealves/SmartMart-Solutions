@@ -6,9 +6,8 @@ from app.models import models
 from app.schemas import schemas
 from app.services import csv_importer
 from app.database import get_db
-from app.schemas.pagination import PaginatedResponse
 from app.utils.pagination import paginate
-from app.schemas.pagination import PaginatedResponse
+from app.schemas.schemas import PaginatedResponse
 
 router = APIRouter(prefix="/products", tags=["products"])
 
@@ -18,33 +17,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-# @router.get("", response_model=list[schemas.Product])
-# def get_products(
-#     db: Session = Depends(get_db),
-#     category_id: int = Query(None, alias="category_id"),
-#     title: str = Query(None, alias="title"),
-#     sort: str = Query("asc", enum=["asc", "desc"]),
-#     sort_by: str = Query("name", enum=["name", "category_id", "brand", "price"])
-# ):
-#     query = db.query(models.Product)
-
-#     if category_id is not None:
-#         query = query.filter(models.Product.category_id == category_id)
-    
-#     if title:
-#         query = query.filter(models.Product.name.ilike(f"%{title}%"))
-
-#     sort_column_map = {
-#         "name": models.Product.name,
-#         "category_id": models.Product.category_id,
-#         "brand": models.Product.brand,
-#         "price": models.Product.price
-#     }
-#     sort_column = sort_column_map.get(sort_by, models.Product.name)
-#     query = query.order_by(desc(sort_column) if sort == "desc" else asc(sort_column))
-
-#     return query.all()
 
 @router.get("", response_model=PaginatedResponse[schemas.Product])
 def get_products(
