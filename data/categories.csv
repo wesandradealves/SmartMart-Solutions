@@ -1,0 +1,16 @@
+id,name,description,price,category_id,brand
+1,Samsung 65" QLED TV,65-inch 4K Smart TV with HDR and quantum dot technology,1299.99,1,Samsung
+2,LG OLED55C1,55-inch OLED 4K Smart TV with AI ThinQ and G-Sync compatibility,1499.99,1,LG
+3,Sony Bravia XR,65-inch 8K LED Smart TV with cognitive processor XR,1899.99,1,Sony
+4,LG French Door Refrigerator,26.2 cu. ft. smart refrigerator with ice maker and door-in-door,2199.99,2,LG
+5,Samsung Family Hub,27 cu. ft. smart refrigerator with touchscreen and cameras,2799.99,2,Samsung
+6,Whirlpool Side-by-Side,25 cu. ft. fingerprint resistant stainless steel refrigerator,1499.99,2,Whirlpool
+7,Dell XPS 15,15.6-inch touchscreen laptop with Intel i9 and 32GB RAM,1999.99,3,Dell
+8,MacBook Pro 16,16-inch laptop with M1 Pro chip and 16GB unified memory,2499.99,3,Apple
+9,Lenovo ThinkPad X1,14-inch business laptop with Intel i7 and 16GB RAM,1699.99,3,Lenovo
+10,Panasonic Countertop Microwave,1.3 cu. ft. 1100W microwave with inverter technology,179.99,4,Panasonic
+11,GE Profile Smart Microwave,1.7 cu. ft. convection microwave with scan-to-cook technology,349.99,4,GE
+12,Samsung Countertop Microwave,1.1 cu. ft. microwave with sensor cooking,159.99,4,Samsung
+13,iPhone 13 Pro Max,6.7-inch Super Retina XDR display with ProMotion and A15 Bionic chip,1099.99,5,Apple
+14,Samsung Galaxy S22 Ultra,6.8-inch Dynamic AMOLED 2X with S Pen and 108MP camera,1199.99,5,Samsung
+15,Google Pixel 6 Pro,6.7-inch LTPO OLED with Google Tensor processor and 50MP camera,899.99,5,Google

@@ -1,0 +1,3 @@
+# 🛍️ SmartMart Backend API
+
+Este projeto é o backend da aplicação interna da SmartMart Solutions...
