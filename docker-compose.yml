@@ -1,17 +1,3 @@
-# services:
-#   backend:
-#     build:
-#       context: . 
-#       dockerfile: Dockerfile  
-#     container_name: smartmart-backend
-#     ports:
-#       - "8000:8000" 
-#     volumes:
-#       - ./data:/data  
-#     environment:
-#       - PYTHONUNBUFFERED=1  
-#     command: ["sh", "-c", "python populate_initial_data.py && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
-
 services:
   backend:
     build:
