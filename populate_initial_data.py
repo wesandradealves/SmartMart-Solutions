@@ -13,9 +13,7 @@ for _, row in categories.iterrows():
     db_session.add(models.Category(
         id=row["id"],
         name=row["name"],
-        description=row["description"],
-        price=row["price"],
-        brand=row["brand"]
+        description=row["description"]
     ))
 
 # Products

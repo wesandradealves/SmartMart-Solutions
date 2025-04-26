@@ -19,8 +19,8 @@ class PaginatedResponse(BaseModel, Generic[T]):
 class CategoryBase(BaseModel):
     name: str
     description: str
-    price: float
-    brand: str
+    # price: float
+    # brand: str
     discount_percentage: float
 
 class CategoryCreate(CategoryBase):
