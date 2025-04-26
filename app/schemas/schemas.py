@@ -88,9 +88,6 @@ class UserUpdate(BaseModel):
 
 class User(UserBase):
     id: int
-
+    hashed_password: str
     class Config:
         from_attributes = True
-        
-class UserWithPassword(UserBase):
-    hashed_password: str
