@@ -79,7 +79,8 @@ def update_user(user_id: int, updated_user: schemas.UserUpdate, db: Session = De
 
     db.commit()
     db.refresh(db_user)
-    return db_user
+    response = JSONResponse(content={"message": "Dados alterados com sucesso", "uid": user_id})
+    return response
 
 @router.delete("/{user_id}")
 def delete_user(user_id: int, db: Session = Depends(get_db)):
@@ -89,7 +90,8 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
 
     db.delete(user)
     db.commit()
-    return {"detail": "Usuário deletado com sucesso"}
+    response = JSONResponse(content={"message": "Usuário deletado com sucesso", "uid": user_id})
+    return response
 
 @router.post("/login")
 def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
