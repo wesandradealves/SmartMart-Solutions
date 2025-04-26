@@ -1,0 +1,3 @@
+id,email,username,password,role,created_at
+1,admin@smartmart.com,admin,admin,admin,2024-01-01T00:00:00
+2,user@smartmart.com,user,user,viewer,2024-01-02T00:00:00

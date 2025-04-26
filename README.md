@@ -1,3 +1,4 @@
+
 # SmartMart Backend API
 
 API para gerenciamento interno de produtos, categorias e vendas da SmartMart Solutions.
@@ -15,6 +16,11 @@ API para gerenciamento interno de produtos, categorias e vendas da SmartMart Sol
 - **Docker** (opcional) - para rodar o backend em um container.
 - **Python 3.11** ou superior.
 - **pip** para instalação de dependências.
+- **Passlib** e **bcrypt** para segurança de senhas.
+
+```bash
+pip install passlib[bcrypt]
+```
 
 ## Instalação
 
@@ -158,6 +164,36 @@ A API possui os seguintes endpoints principais:
 - **GET** `/export/categories` - Exporta as categorias para um arquivo CSV.
 - **GET** `/export/sales` - Exporta as vendas para um arquivo CSV.
 - **GET** `/export/sales_with_profit` - Exporta as vendas com lucro para um arquivo CSV.
+
+### Usuários
+
+- **GET** `/users` - Lista todos os usuários, com suporte a paginação e ordenação.
+  - **Query parameters:**
+    - `sort`: Ordena os resultados. Valores: `asc` ou `desc`.
+    - `sort_by`: Campo para ordenar. Valores: `username`, `email`, `role`, `created_at`.
+    - `page`: Número da página (padrão: 0).
+    - `limit`: Número de itens por página (padrão: 10).
+  - **Resposta:**
+    ```json
+    {
+      "total": 5,
+      "page": 1,
+      "page_size": 10,
+      "items": [
+        {
+          "id": 1,
+          "email": "email@domain.com",
+          "username": "admin",
+          "role": "admin",
+          "created_at": "2025-04-26T14:42:25.154Z"
+        }
+      ]
+    }
+    ```
+
+- **POST** `/users` - Cria um novo usuário.
+- **PUT** `/users/{user_id}` - Atualiza um usuário existente.
+- **DELETE** `/users/{user_id}` - Deleta um usuário.
 
 ## Estrutura de Arquivos
 

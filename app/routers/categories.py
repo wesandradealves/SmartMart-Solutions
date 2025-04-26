@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import asc, desc
-from app.database import SessionLocal
 from app.models import models
 from app.schemas import schemas
 from app.database import get_db
@@ -9,13 +8,6 @@ from app.utils.pagination import paginate
 from app.schemas.schemas import PaginatedResponse
 
 router = APIRouter(prefix="/categories", tags=["categories"])
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @router.get("", response_model=PaginatedResponse[schemas.Category])
 def get_categories(
