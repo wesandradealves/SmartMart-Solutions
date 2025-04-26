@@ -140,7 +140,7 @@ A API possui os seguintes endpoints principais:
 
 - **GET** `/sales` - Lista todas as vendas, incluindo o cálculo de lucro.
   - **Query parameters:**
-    - `sort_by`: `"total_price"` ou `"profit"` (padrão: `"total_price"`)
+    - `sort_by`: `"total_price"` ou `"profit"` ou `"date"` (padrão: `"total_price"`)
     - `sort_order`: `"asc"` ou `"desc"` (padrão: `"asc"`)
     - `days`: Número de dias retroativos para filtrar as vendas (padrão: `365` dias)
     - `skip`: Número de registros para pular (paginação)

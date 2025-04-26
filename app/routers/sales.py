@@ -4,6 +4,7 @@ from sqlalchemy import asc, desc
 from app.models import models
 from app.schemas import schemas
 from app.utils.profit import calculate_profit
+from app.services.profit_service import calculate_total_profit
 from app.database import get_db
 from app.utils.pagination import paginate
 from app.schemas.schemas import PaginatedResponse
@@ -64,7 +65,14 @@ def get_sales(
         items=items,
         total=total
     )
-
+    
+@router.get("/profit/total")
+def get_total_profit(
+    db: Session = Depends(get_db),
+    days: int = Query(365, ge=1, description="Número de dias para considerar (padrão: últimos 365 dias)")
+):
+    total_profit = calculate_total_profit(db, days)
+    return {"total_profit": total_profit}
 
 @router.post("/", response_model=schemas.Sale)
 def create_sale(sale: schemas.SaleCreate, db: Session = Depends(get_db)):
