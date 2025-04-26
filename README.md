@@ -33,7 +33,7 @@ cd smartmart-backend-v4
 ```bash
 python -m venv venv
 source venv/bin/activate  # Para Linux/macOS
-venv\Scripts\activate     # Para Windows
+venv\Scriptsctivate     # Para Windows
 ```
 
 ### 3. Instalando dependências
@@ -87,6 +87,11 @@ A API possui os seguintes endpoints principais:
 ### Produtos
 
 - **GET** `/products` - Lista todos os produtos.
+  - **Query parameters:**
+    - `category`: Filtra os produtos pela categoria.
+    - `title`: Filtra os produtos pelo título (nome).
+    - `sort`: Ordena os resultados. Use `asc` para ordem crescente e `desc` para ordem decrescente.
+  
 - **POST** `/products` - Cria um novo produto.
 - **PUT** `/products/{product_id}` - Atualiza um produto existente.
 - **DELETE** `/products/{product_id}` - Deleta um produto.

@@ -16,8 +16,31 @@ def get_db():
         db.close()
 
 @router.get("", response_model=list[schemas.Product])
-def get_products(db: Session = Depends(get_db)):
-    return db.query(models.Product).all()
+def get_products(
+    db: Session = Depends(get_db),
+    category: str = Query(None, alias="category"),
+    title: str = Query(None, alias="title"),
+    sort: str = Query("asc", enum=["asc", "desc"]),
+    sort_by: str = Query("name", enum=["name", "category", "brand", "price"])
+):
+    query = db.query(models.Product)
+
+    if category:
+        query = query.filter(models.Product.category.ilike(f"%{category}%"))
+    
+    if title:
+        query = query.filter(models.Product.name.ilike(f"%{title}%"))
+
+    sort_column_map = {
+        "name": models.Product.name,
+        "category": models.Product.category,
+        "brand": models.Product.brand,
+        "price": models.Product.price
+    }
+    sort_column = sort_column_map.get(sort_by, models.Product.name)
+    query = query.order_by(desc(sort_column) if sort == "desc" else asc(sort_column))
+
+    return query.all()
 
 @router.post("", response_model=schemas.Product)
 def create_product(product: schemas.ProductBase, db: Session = Depends(get_db)):

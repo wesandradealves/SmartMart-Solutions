@@ -15,10 +15,32 @@ def get_db():
     finally:
         db.close()
 
+# @router.get("", response_model=list[schemas.SaleWithProfit])
+# def get_sales(db: Session = Depends(get_db)):
+#     sales = db.query(models.Sale).all()
+#     return [calculate_profit(sale) for sale in sales] 
+
 @router.get("", response_model=list[schemas.SaleWithProfit])
-def get_sales(db: Session = Depends(get_db)):
+def get_sales(
+    db: Session = Depends(get_db),
+    sort_by: str = "total_price",  
+    sort_order: str = "asc" 
+):
+    if sort_order == "desc":
+        sort_direction = desc
+    else:
+        sort_direction = asc
+
     sales = db.query(models.Sale).all()
-    return [calculate_profit(sale) for sale in sales] 
+
+    sales_with_profit = [calculate_profit(sale) for sale in sales]
+
+    if sort_by == "profit":
+        sales_with_profit.sort(key=lambda x: x.profit, reverse=(sort_order == "desc"))
+    elif sort_by == "total_price":
+        sales_with_profit.sort(key=lambda x: x.total_price, reverse=(sort_order == "desc"))
+
+    return sales_with_profit
 
 @router.post("/", response_model=schemas.Sale)
 def create_sale(sale: schemas.SaleCreate, db: Session = Depends(get_db)):
