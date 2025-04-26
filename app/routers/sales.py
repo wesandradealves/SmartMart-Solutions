@@ -66,13 +66,23 @@ def get_sales(
         total=total
     )
     
+# @router.get("/profit/total")
+# def get_total_profit(
+#     db: Session = Depends(get_db),
+#     days: int = Query(365, ge=1, description="Número de dias para considerar (padrão: últimos 365 dias)")
+# ):
+#     total_profit = calculate_total_profit(db, days)
+#     return {"total_profit": total_profit}
+
 @router.get("/profit/total")
 def get_total_profit(
     db: Session = Depends(get_db),
-    days: int = Query(365, ge=1, description="Número de dias para considerar (padrão: últimos 365 dias)")
+    days: int = Query(365, ge=1, description="Número de dias para considerar (padrão: últimos 365 dias)"),
+    product_id: int = Query(None, description="ID do produto para filtrar as vendas")
 ):
-    total_profit = calculate_total_profit(db, days)
-    return {"total_profit": total_profit}
+    result = calculate_total_profit(db, days, product_id)
+    return result
+
 
 @router.post("/", response_model=schemas.Sale)
 def create_sale(sale: schemas.SaleCreate, db: Session = Depends(get_db)):
