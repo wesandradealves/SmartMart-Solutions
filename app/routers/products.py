@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, UploadFile, HTTPException, Query
 from sqlalchemy.orm import Session
+from sqlalchemy import asc, desc
 from app.database import SessionLocal
 from app.models import models
 from app.schemas import schemas
@@ -18,22 +19,22 @@ def get_db():
 @router.get("", response_model=list[schemas.Product])
 def get_products(
     db: Session = Depends(get_db),
-    category: str = Query(None, alias="category"),
+    category_id: int = Query(None, alias="category_id"),
     title: str = Query(None, alias="title"),
     sort: str = Query("asc", enum=["asc", "desc"]),
-    sort_by: str = Query("name", enum=["name", "category", "brand", "price"])
+    sort_by: str = Query("name", enum=["name", "category_id", "brand", "price"])
 ):
     query = db.query(models.Product)
 
-    if category:
-        query = query.filter(models.Product.category.ilike(f"%{category}%"))
+    if category_id is not None:
+        query = query.filter(models.Product.category_id == category_id)
     
     if title:
         query = query.filter(models.Product.name.ilike(f"%{title}%"))
 
     sort_column_map = {
         "name": models.Product.name,
-        "category": models.Product.category,
+        "category_id": models.Product.category_id,
         "brand": models.Product.brand,
         "price": models.Product.price
     }
