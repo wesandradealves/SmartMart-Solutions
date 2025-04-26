@@ -7,7 +7,7 @@ import io
 from app.database import get_db
 from app import models
 
-router = APIRouter(prefix="/export", tags=["Export"])
+router = APIRouter(prefix="/export", tags=["export"])
 
 def generate_csv(data, headers):
     stream = io.StringIO()
