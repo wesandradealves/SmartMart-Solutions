@@ -62,8 +62,6 @@ def get_users(
 
     return PaginatedResponse(items=users, total=total)
 
-
-
 @router.put("/{user_id}")
 def update_user(user_id: int, updated_user: schemas.UserUpdate, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
@@ -107,8 +105,9 @@ def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Credenciais inválidas")
 
     token = security.create_session_token(db_user)
+    response_message = f"✅ Você está logado como {db_user.username}"
 
-    response = JSONResponse(content={"message": "Login bem-sucedido", "token": token})
+    response = JSONResponse(content={"message": response_message, "token": token})
     response.set_cookie(key="session_token", value=token, httponly=True, max_age=3600)
 
     return response
