@@ -97,8 +97,8 @@ A API possui os seguintes endpoints principais:
     - `title`: Filtra os produtos pelo título (nome).
     - `sort`: Ordena os resultados. Valores: `asc` ou `desc`.
     - `sort_by`: Escolhe o campo para ordenar. Valores: `name`, `category_id`, `brand`, `price`.
-    - `page`: Número da página (padrão: 1).
-    - `page_size`: Número de itens por página (padrão: 10).
+    - `skip`: Offset (padrão: 0).
+    - `limit`: Número de itens por página (padrão: 10).
   - **Resposta:**
     ```json
     {
@@ -288,8 +288,8 @@ A API possui os seguintes endpoints principais:
   - **Query parameters:**
     - `sort_by`: Campo para ordenação (`id` ou `name`).
     - `sort_order`: Direção da ordenação (`asc` ou `desc`).
-    - `page`: Número da página (padrão: 1).
-    - `page_size`: Número de itens por página (padrão: 10).
+    - `skip`: Offset (padrão: 0).
+    - `limit`: Número de itens por página (padrão: 10).
   - **Resposta:**
     ```json
       {
@@ -861,7 +861,7 @@ A API possui os seguintes endpoints principais:
   - **Query parameters:**
     - `sort`: Ordena os resultados. Valores: `asc` ou `desc`.
     - `sort_by`: Campo para ordenar. Valores: `username`, `email`, `role`, `created_at`.
-    - `page`: Número da página (padrão: 0).
+    - `skip`: Offset (padrão: 0).
     - `limit`: Número de itens por página (padrão: 10).
   - **Resposta:**
     ```json
