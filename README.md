@@ -167,6 +167,12 @@ A API possui os seguintes endpoints principais:
 - **PUT** `/sales/{sale_id}` - Atualiza uma venda existente.
 - **DELETE** `/sales/{sale_id}` - Deleta uma venda.
 
+### **Serviço de cálculo de lucro total**:
+- **Endpoint**: `/sales/profit/total`
+- **Método**: `GET`
+- **Query Parameter**:
+  - `days`: Número de dias para considerar o cálculo do lucro (padrão: 365).
+
 ### Exportação de Dados
 
 - **GET** `/export/products` - Exporta os produtos para um arquivo CSV.
