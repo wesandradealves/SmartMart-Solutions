@@ -1,6 +1,9 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, Generic, TypeVar, List
 from datetime import datetime
+from pydantic.generics import GenericModel
+
+T = TypeVar('T')
 
 class CategoryBase(BaseModel):
     name: str
@@ -47,3 +50,7 @@ class SaleCreate(SaleBase):
 
 class SaleWithProfit(Sale):
     profit: float
+
+class PaginatedResponse(GenericModel, Generic[T]):
+    items: List[T]
+    total: int

@@ -6,6 +6,9 @@ from app.models import models
 from app.schemas import schemas
 from app.services import csv_importer
 from app.database import get_db
+from app.schemas.pagination import PaginatedResponse
+from app.utils.pagination import paginate
+from app.schemas.pagination import PaginatedResponse
 
 router = APIRouter(prefix="/products", tags=["products"])
 
@@ -16,19 +19,47 @@ def get_db():
     finally:
         db.close()
 
-@router.get("", response_model=list[schemas.Product])
+# @router.get("", response_model=list[schemas.Product])
+# def get_products(
+#     db: Session = Depends(get_db),
+#     category_id: int = Query(None, alias="category_id"),
+#     title: str = Query(None, alias="title"),
+#     sort: str = Query("asc", enum=["asc", "desc"]),
+#     sort_by: str = Query("name", enum=["name", "category_id", "brand", "price"])
+# ):
+#     query = db.query(models.Product)
+
+#     if category_id is not None:
+#         query = query.filter(models.Product.category_id == category_id)
+    
+#     if title:
+#         query = query.filter(models.Product.name.ilike(f"%{title}%"))
+
+#     sort_column_map = {
+#         "name": models.Product.name,
+#         "category_id": models.Product.category_id,
+#         "brand": models.Product.brand,
+#         "price": models.Product.price
+#     }
+#     sort_column = sort_column_map.get(sort_by, models.Product.name)
+#     query = query.order_by(desc(sort_column) if sort == "desc" else asc(sort_column))
+
+#     return query.all()
+
+@router.get("", response_model=PaginatedResponse[schemas.Product])
 def get_products(
     db: Session = Depends(get_db),
-    category_id: int = Query(None, alias="category_id"),
-    title: str = Query(None, alias="title"),
+    category_id: int = Query(None),
+    title: str = Query(None),
     sort: str = Query("asc", enum=["asc", "desc"]),
-    sort_by: str = Query("name", enum=["name", "category_id", "brand", "price"])
+    sort_by: str = Query("name", enum=["name", "category_id", "brand", "price"]),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(10, ge=1)
 ):
     query = db.query(models.Product)
 
     if category_id is not None:
         query = query.filter(models.Product.category_id == category_id)
-    
     if title:
         query = query.filter(models.Product.name.ilike(f"%{title}%"))
 
@@ -41,7 +72,14 @@ def get_products(
     sort_column = sort_column_map.get(sort_by, models.Product.name)
     query = query.order_by(desc(sort_column) if sort == "desc" else asc(sort_column))
 
-    return query.all()
+    products, total = paginate(query, skip, limit)
+
+    return PaginatedResponse(
+        items=products,
+        total=total
+    )
+
+
 
 @router.post("", response_model=schemas.Product)
 def create_product(product: schemas.ProductBase, db: Session = Depends(get_db)):
