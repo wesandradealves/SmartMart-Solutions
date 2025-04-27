@@ -1,5 +1,5 @@
 from typing import Optional
-from fastapi import APIRouter, Depends, HTTPException, Query, status, Cookie
+from fastapi import APIRouter, Depends, HTTPException, Query, status, Cookie, Response
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import asc, desc
@@ -91,6 +91,27 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     response = JSONResponse(content={"message": "Usuário deletado com sucesso", "uid": user_id})
     return response
 
+# @router.post("/login")
+# def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
+#     db_user = None
+
+#     if user.email:
+#         normalized_email = user.email.strip().lower()
+#         db_user = db.query(models.User).filter(models.User.email == normalized_email).first()
+#     elif user.username:
+#         db_user = db.query(models.User).filter(models.User.username == user.username).first()
+
+#     if not db_user or not security.verify_password(user.password, db_user.password):
+#         return JSONResponse(status_code=401, content={"message": "Credenciais inválidas"})
+
+#     token = security.create_session_token(db_user)
+#     response_message = f"✅ Você está logado como {db_user.username}"
+
+#     response = JSONResponse(content={"message": response_message, "token": token})
+#     response.set_cookie(key="session_token", value=token, httponly=True, max_age=3600)
+
+#     return response
+
 @router.post("/login")
 def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
     db_user = None
@@ -113,7 +134,7 @@ def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
     return response
 
 @router.post("/logout")
-def logout(response: JSONResponse, session_token: Optional[str] = Cookie(None)):
+def logout(response: Response, session_token: Optional[str] = Cookie(None)):
     if not session_token:
         raise HTTPException(status_code=400, detail="Nenhuma sessão ativa")
 
@@ -122,5 +143,5 @@ def logout(response: JSONResponse, session_token: Optional[str] = Cookie(None)):
     except HTTPException:
         raise HTTPException(status_code=401, detail="Sessão inválida")
 
-    response.delete_cookie("session_token")
-    return JSONResponse(content={"message": "Logout bem-sucedido"})
+    response.delete_cookie("session_token", path="/")
+    return {"message": "Logout bem-sucedido"}
