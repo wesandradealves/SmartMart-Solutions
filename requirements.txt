@@ -8,4 +8,4 @@ bcrypt==3.2.2
 passlib[bcrypt]
 email-validator
 itsdangerous
-python-jose[cryptography]  # para geração e verificação de JWT
+python-jose[cryptography]  

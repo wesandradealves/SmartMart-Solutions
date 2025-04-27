@@ -26,6 +26,7 @@ class CategoryCreate(CategoryBase):
 
 class Category(CategoryBase):
     id: int
+    total_products: int  
 
     class Config:
         from_attributes = True 

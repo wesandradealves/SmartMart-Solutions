@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.orm import Session
-from sqlalchemy import asc, desc
+from sqlalchemy.orm import Session, aliased
+from sqlalchemy import asc, desc, func
 from app.models import models
 from app.schemas import schemas
 from app.database import get_db
@@ -21,7 +21,14 @@ def get_categories(
     sort_column = models.Category.id if sort_by == "id" else models.Category.name
 
     query = db.query(models.Category).order_by(sort_direction(sort_column))
+
+    query = query.outerjoin(models.Product).group_by(models.Category.id)
+    
     categories, total = paginate(query, skip, limit)
+
+    for category in categories:
+        category_data = db.query(models.Product).filter(models.Product.category_id == category.id).count()
+        category.total_products = category_data  
 
     return PaginatedResponse(
         items=categories,
