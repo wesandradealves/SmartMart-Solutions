@@ -12,6 +12,7 @@ from app.schemas.schemas import PaginatedResponse
 
 router = APIRouter(prefix="/users", tags=["users"])
 
+# Criar um novo usuário
 @router.post("", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     normalized_email = user.email.strip().lower()
@@ -33,6 +34,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.refresh(db_user)
     return db_user
 
+# Recuperar usuários
 @router.get("", response_model=PaginatedResponse[schemas.User])
 def get_users(
     db: Session = Depends(get_db),
@@ -62,24 +64,33 @@ def get_users(
 
     return PaginatedResponse(items=users, total=total)
 
+# Atualizar um usuário
 @router.put("/{user_id}")
 def update_user(user_id: int, updated_user: schemas.UserUpdate, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
+
     if not db_user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
 
     if updated_user.email is not None:
         normalized_email = updated_user.email.strip().lower()
         updated_user.email = normalized_email
+    
+    if updated_user.password:
+        updated_user.password = security.hash_password(updated_user.password)
 
     for key, value in updated_user.dict(exclude_unset=True).items():
         setattr(db_user, key, value)
 
     db.commit()
+    
     db.refresh(db_user)
-    response = JSONResponse(content={"message": "Dados alterados com sucesso", "uid": user_id})
-    return response
+    
+    print(f"Usuário {user_id} atualizado: {db_user}")
 
+    return db_user
+
+# Deletar um usuário
 @router.delete("/{user_id}")
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == user_id).first()
@@ -91,27 +102,7 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     response = JSONResponse(content={"message": "Usuário deletado com sucesso", "uid": user_id})
     return response
 
-# @router.post("/login")
-# def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
-#     db_user = None
-
-#     if user.email:
-#         normalized_email = user.email.strip().lower()
-#         db_user = db.query(models.User).filter(models.User.email == normalized_email).first()
-#     elif user.username:
-#         db_user = db.query(models.User).filter(models.User.username == user.username).first()
-
-#     if not db_user or not security.verify_password(user.password, db_user.password):
-#         return JSONResponse(status_code=401, content={"message": "Credenciais inválidas"})
-
-#     token = security.create_session_token(db_user)
-#     response_message = f"✅ Você está logado como {db_user.username}"
-
-#     response = JSONResponse(content={"message": response_message, "token": token})
-#     response.set_cookie(key="session_token", value=token, httponly=True, max_age=3600)
-
-#     return response
-
+# Login e Logout
 @router.post("/login")
 def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
     db_user = None
@@ -122,7 +113,15 @@ def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
     elif user.username:
         db_user = db.query(models.User).filter(models.User.username == user.username).first()
 
-    if not db_user or not security.verify_password(user.password, db_user.password):
+    if not db_user:
+        raise HTTPException(status_code=401, detail="Credenciais inválidas")
+
+    if not security.pwd_context.identify(db_user.password):  
+        db_user.password = security.hash_password(db_user.password) 
+        db.commit()  
+        print("Senha foi re-hashada.")  
+
+    if not security.verify_password(user.password, db_user.password):
         raise HTTPException(status_code=401, detail="Credenciais inválidas")
 
     token = security.create_session_token(db_user)
@@ -132,6 +131,7 @@ def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
     response.set_cookie(key="session_token", value=token, httponly=True, max_age=3600)
 
     return response
+
 
 @router.post("/logout")
 def logout(response: Response, session_token: Optional[str] = Cookie(None)):

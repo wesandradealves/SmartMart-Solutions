@@ -10,7 +10,9 @@ def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
+    print(f"Verificando senha: {plain_password} contra hash: {hashed_password}")  # Debug
     return pwd_context.verify(plain_password, hashed_password)
+
 
 SECRET_KEY = os.getenv("SECRET_KEY", "mysecretkey")
 ALGORITHM = "HS256"
