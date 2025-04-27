@@ -1,5 +1,5 @@
 from typing import Optional
-from fastapi import APIRouter, Depends, HTTPException, Query, status, Cookie
+from fastapi import APIRouter, Depends, HTTPException, Query, status, Cookie, Response
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import asc, desc
@@ -93,6 +93,7 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
 
 @router.post("/login")
 def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
+    print(f"Login attempt: email={user.email}, username={user.username}")  # Log para depuração
     db_user = None
 
     if user.email:
@@ -113,7 +114,7 @@ def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
     return response
 
 @router.post("/logout")
-def logout(response: JSONResponse, session_token: Optional[str] = Cookie(None)):
+def logout(response: Response, session_token: Optional[str] = Cookie(None)):
     if not session_token:
         raise HTTPException(status_code=400, detail="Nenhuma sessão ativa")
 
@@ -122,5 +123,6 @@ def logout(response: JSONResponse, session_token: Optional[str] = Cookie(None)):
     except HTTPException:
         raise HTTPException(status_code=401, detail="Sessão inválida")
 
-    response.delete_cookie("session_token")
-    return JSONResponse(content={"message": "Logout bem-sucedido"})
+    # Deleta o cookie de sessão
+    response.delete_cookie("session_token", path="/")
+    return {"message": "Logout bem-sucedido"}
