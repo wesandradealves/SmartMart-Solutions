@@ -93,7 +93,7 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
 
 @router.post("/login")
 def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
-    print(f"Login attempt: email={user.email}, username={user.username}")  # Log para depuração
+    print(f"⌛ Login attempt: email={user.email}, username={user.username}") 
     db_user = None
 
     if user.email:
@@ -123,6 +123,5 @@ def logout(response: Response, session_token: Optional[str] = Cookie(None)):
     except HTTPException:
         raise HTTPException(status_code=401, detail="Sessão inválida")
 
-    # Deleta o cookie de sessão
     response.delete_cookie("session_token", path="/")
     return {"message": "Logout bem-sucedido"}
