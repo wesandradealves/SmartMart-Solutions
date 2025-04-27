@@ -9,8 +9,13 @@ class Category(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
     description = Column(String)
-    discount_percentage = Column(Float, default=0.0) 
+    discount_percentage = Column(Float, default=0.0)
     products = relationship("Product", back_populates="category")
+
+    def __repr__(self):
+        return f"Category(id={self.id}, name={self.name})"
+
+
     
 class Product(Base):
     __tablename__ = "products"
