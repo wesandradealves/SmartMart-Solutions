@@ -3,6 +3,10 @@
 
 API para gerenciamento interno de produtos, categorias e vendas da SmartMart Solutions.
 
+- Frontend [https://github.com/wesandradealves/SmartMart-Solutions---Front](https://github.com/wesandradealves/SmartMart-Solutions---Front) 
+
+- Backend [https://github.com/wesandradealves/SmartMart-Solutions](https://github.com/wesandradealves/SmartMart-Solutions) 
+
 ## Tecnologias
 
 - **FastAPI** para construção da API.
