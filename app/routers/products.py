@@ -15,7 +15,7 @@ def get_products(
     db: Session = Depends(get_db),
     category_id: int = Query(None),
     title: str = Query(None),
-    sort: str = Query("asc", enum=["asc", "desc"]),
+    sort: str = Query("asc", enum=["asc", "desc"]),  # Corrigido para 'sort'
     sort_by: str = Query("name", enum=["name", "category_id", "brand", "price"]),
     skip: int = Query(0, ge=0),
     limit: int = Query(10, ge=1)
@@ -85,28 +85,16 @@ def update_product(product_id: int, updated_product: schemas.ProductBase, db: Se
     return product
 
 
-# @router.delete("/{product_id}")
-# def delete_product(product_id: int, db: Session = Depends(get_db)):
-#     product = db.query(models.Product).filter(models.Product.id == product_id).first()
-#     if not product:
-#         raise HTTPException(status_code=404, detail="Produto não encontrado")
-
-#     db.delete(product)
-#     db.commit()
-#     return {"detail": "Produto deletado com sucesso"}
-
 @router.delete("/{category_id}")
 def delete_category(category_id: int, db: Session = Depends(get_db)):
     category = db.query(models.Category).filter(models.Category.id == category_id).first()
     if not category:
         raise HTTPException(status_code=404, detail="Categoria não encontrada")
 
-    # Remover a categoria dos produtos relacionados
     db.query(models.Product).filter(models.Product.category_id == category_id).update(
         {models.Product.category_id: None}, synchronize_session=False
     )
     
-    # Deletar a categoria
     db.delete(category)
     db.commit()
     
