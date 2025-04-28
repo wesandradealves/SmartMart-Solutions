@@ -5,8 +5,8 @@ import csv
 import io
 
 from app.database import get_db
-from app import models
-from app.models.models import Product, Sale
+# from app import models
+from app.models.models import Product, Sale, Category, User  
 
 router = APIRouter(prefix="/export", tags=["export"])
 
@@ -21,13 +21,10 @@ def generate_csv(data, headers):
 
 @router.get("/products")
 def export_products_csv(db: Session = Depends(get_db)):
-    # Query the Product model to fetch all products
     products = db.query(Product).all()
 
-    # Define the headers for the CSV file
     headers = ["id", "name", "description", "price", "category_id", "brand"]
 
-    # Generate the CSV file using the generate_csv function
     return StreamingResponse(
         generate_csv(products, headers),
         media_type="text/csv",
@@ -42,8 +39,8 @@ def export_sales_csv(db: Session = Depends(get_db)):
 
 @router.get("/categories")
 def export_categories_csv(db: Session = Depends(get_db)):
-    categories = db.query(models.Category).all()
-    headers = ["id", "name", "description", "price", "brand"]
+    categories = db.query(Category).all()
+    headers = ["id", "name", "description"]  
     return StreamingResponse(generate_csv(categories, headers), media_type="text/csv", headers={"Content-Disposition": "attachment; filename=categories.csv"})
 
 @router.get("/sales_with_profit")
@@ -51,3 +48,13 @@ def export_sales_with_profit_csv(db: Session = Depends(get_db)):
     sales = db.query(Sale).all()
     headers = ["id", "product_id", "quantity", "total_price", "date", "profit"]
     return StreamingResponse(generate_csv(sales, headers), media_type="text/csv", headers={"Content-Disposition": "attachment; filename=sales_with_profit.csv"})
+
+@router.get("/users")
+def export_users_csv(db: Session = Depends(get_db)):
+    users = db.query(User).all()
+    headers = ["id", "email", "username", "role", "created_at"]
+    return StreamingResponse(
+        generate_csv(users, headers),
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=users.csv"}
+    )
