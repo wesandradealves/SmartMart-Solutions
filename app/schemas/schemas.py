@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr, model_validator 
+from pydantic import BaseModel, Field, EmailStr, model_validator, root_validator
 from typing import Optional, Generic, TypeVar, List
 from datetime import datetime
 from enum import Enum  
@@ -20,16 +20,26 @@ class CategoryBase(BaseModel):
     name: str
     description: str
     discount_percentage: float
+    class Config:
+        from_attributes = True
 
 class CategoryCreate(CategoryBase):
-    pass
+    name: Optional[str] = None
+    description: Optional[str] = None
+    discount_percentage: Optional[float] = None
 
+    @root_validator(pre=True)
+    def check_name_or_description(cls, values):
+        name = values.get('name')
+        description = values.get('description')
+
+        if not name and not description:
+            raise ValueError('Pelo menos nome ou descrição deve ser fornecido.')
+        return values
+    
 class Category(CategoryBase):
     id: int
-    total_products: int  
-
-    class Config:
-        from_attributes = True 
+    total_products: Optional[int] = None 
 
 # Products
 
@@ -45,13 +55,12 @@ class ProductBase(BaseModel):
     price: float = Field(..., gt=0, example=1299.99)
     category_id: int = Field(..., example=2)
     brand: str = Field(..., example="Samsung")
+    class Config:
+        from_attributes = True
 
 class Product(ProductBase):
     id: int
     category: CategoryName
-
-    class Config:
-        from_attributes = True
 
 class ProductCreate(ProductBase):
     pass
@@ -63,12 +72,11 @@ class SaleBase(BaseModel):
     quantity: int
     total_price: float
     date: datetime
+    class Config:
+        from_attributes = True
 
 class Sale(SaleBase):
     id: int
-
-    class Config:
-        from_attributes = True
 
 class SaleCreate(SaleBase):
     pass
@@ -117,9 +125,9 @@ class PriceHistoryBase(BaseModel):
     price: float
     date: datetime
     reason: Optional[str] = None
+    class Config:
+        from_attributes = True
 
 class PriceHistory(PriceHistoryBase):
     id: int
 
-    class Config:
-        from_attributes = True
