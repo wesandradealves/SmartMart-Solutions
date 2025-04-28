@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile
 from sqlalchemy.orm import Session, aliased
 from sqlalchemy import asc, desc, func
 from app.models import models
@@ -102,3 +102,8 @@ def delete_category(category_id: int, db: Session = Depends(get_db)):
     db.delete(category)
     db.commit()
     return {"detail": "Categoria deletada com sucesso"}
+
+@router.post("/upload-csv")
+def upload_categories_csv(file: UploadFile, db: Session = Depends(get_db)):
+    from app.services.csv_importer import import_categories_csv
+    return import_categories_csv(file, db)

@@ -28,3 +28,14 @@ def import_users_csv(file, db):
         db.add(user)
     db.commit()
     return {"message": "Usuários importados com sucesso."}
+
+def import_categories_csv(file, db):
+    df = pd.read_csv(file.file)
+    for _, row in df.iterrows():
+        category = models.Category(
+            name=row["name"].strip(),
+            description=row.get("description", "").strip() if pd.notna(row.get("description")) else None
+        )
+        db.add(category)
+    db.commit()
+    return {"message": "Categorias importadas com sucesso."}
