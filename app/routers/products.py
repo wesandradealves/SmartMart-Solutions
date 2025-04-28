@@ -1,26 +1,25 @@
 from fastapi import APIRouter, Depends, UploadFile, HTTPException, Query
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import asc, desc
 from app.models import models
 from app.schemas import schemas
 from app.services import csv_importer
 from app.database import get_db
 from app.utils.pagination import paginate
-from app.schemas.schemas import PaginatedResponse
 
 router = APIRouter(prefix="/products", tags=["products"])
 
-@router.get("", response_model=PaginatedResponse[schemas.Product])
+@router.get("", response_model=schemas.PaginatedResponse[schemas.Product])
 def get_products(
     db: Session = Depends(get_db),
     category_id: int = Query(None),
     title: str = Query(None),
-    sort: str = Query("asc", enum=["asc", "desc"]),  # Corrigido para 'sort'
-    sort_by: str = Query("name", enum=["name", "category_id", "brand", "price"]),
+    sort: str = Query("asc", enum=["asc", "desc"]),
+    sort_by: str = Query("name", enum=["id", "name", "category_id", "brand", "price"]),
     skip: int = Query(0, ge=0),
     limit: int = Query(10, ge=1)
 ):
-    query = db.query(models.Product)
+    query = db.query(models.Product).options(joinedload(models.Product.category))
 
     if category_id is not None:
         query = query.filter(models.Product.category_id == category_id)
@@ -28,6 +27,7 @@ def get_products(
         query = query.filter(models.Product.name.ilike(f"%{title}%"))
 
     sort_column_map = {
+        "id": models.Product.id,
         "name": models.Product.name,
         "category_id": models.Product.category_id,
         "brand": models.Product.brand,
@@ -38,10 +38,11 @@ def get_products(
 
     products, total = paginate(query, skip, limit)
 
-    return PaginatedResponse(
+    return schemas.PaginatedResponse(
         items=products,
         total=total
     )
+
 
 @router.post("", response_model=schemas.Product)
 def create_product(product: schemas.ProductBase, db: Session = Depends(get_db)):
@@ -70,7 +71,7 @@ def update_product(product_id: int, updated_product: schemas.ProductBase, db: Se
     normalized_name = updated_product.name.strip().lower()
 
     existing_product = db.query(models.Product).filter(
-        models.Product.id != product_id,  # ignora ele mesmo
+        models.Product.id != product_id,  
         models.Product.name.ilike(normalized_name)
     ).first()
 

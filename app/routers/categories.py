@@ -9,7 +9,7 @@ from app.schemas.schemas import PaginatedResponse
 
 router = APIRouter(prefix="/categories", tags=["categories"])
 
-@router.get("", response_model=PaginatedResponse[schemas.Category])
+@router.get("", response_model=schemas.PaginatedResponse[schemas.Category])
 def get_categories(
     db: Session = Depends(get_db),
     sort_by: str = Query("name", enum=["id", "name"]),
@@ -23,14 +23,14 @@ def get_categories(
     query = db.query(models.Category).order_by(sort_direction(sort_column))
 
     query = query.outerjoin(models.Product).group_by(models.Category.id)
-    
+
     categories, total = paginate(query, skip, limit)
 
     for category in categories:
         category_data = db.query(models.Product).filter(models.Product.category_id == category.id).count()
-        category.total_products = category_data  
+        category.total_products = category_data
 
-    return PaginatedResponse(
+    return schemas.PaginatedResponse(
         items=categories,
         total=total
     )

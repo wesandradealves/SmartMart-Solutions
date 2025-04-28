@@ -14,7 +14,7 @@ class PaginatedResponse(BaseModel, Generic[T]):
     items: List[T]
     total: int
 
-# Categories
+# Categories=
 
 class CategoryBase(BaseModel):
     name: str
@@ -33,6 +33,12 @@ class Category(CategoryBase):
 
 # Products
 
+class CategoryName(BaseModel):
+    name: str
+
+    class Config:
+        from_attributes = True
+
 class ProductBase(BaseModel):
     name: str = Field(..., example="Smartphone Galaxy A15")
     description: str = Field(..., example="Smartphone com tela de 6,5 polegadas")
@@ -42,6 +48,7 @@ class ProductBase(BaseModel):
 
 class Product(ProductBase):
     id: int
+    category: CategoryName
 
     class Config:
         from_attributes = True
