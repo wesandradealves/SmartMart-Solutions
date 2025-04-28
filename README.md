@@ -1,4 +1,3 @@
-
 # SmartMart Backend API
 
 API para gerenciamento interno de produtos, categorias e vendas da SmartMart Solutions.
@@ -895,6 +894,20 @@ A API possui os seguintes endpoints principais:
 - **POST** `/users` - Cria um novo usuário.
 - **PUT** `/users/{user_id}` - Atualiza um usuário existente.
 - **DELETE** `/users/{user_id}` - Deleta um usuário.
+
+### 🔒 Rotas Protegidas
+
+Somente usuários com a role `admin` têm acesso ao menu de usuários e podem realizar as seguintes ações:
+
+- Visualizar a lista de usuários.
+- Alterar informações de outros usuários.
+- Deletar usuários.
+
+Essas restrições garantem maior segurança e controle sobre as operações administrativas.
+
+### 🔗 Serviços de Admin
+
+- [**Gerenciamento de Usuários** ⭐](#usuários)
 
 ## 🔐 Autenticação
 
