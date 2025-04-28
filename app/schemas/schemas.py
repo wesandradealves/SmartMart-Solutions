@@ -1,25 +1,30 @@
-from pydantic import BaseModel, Field, EmailStr, model_validator, root_validator
+from pydantic import BaseModel, Field, EmailStr, model_validator
 from typing import Dict, Optional, Generic, TypeVar, List
 from datetime import datetime
 from enum import Enum  
 
 T = TypeVar('T')
 
+# Roles
+
 class RoleEnum(str, Enum):
     admin = "admin"
     viewer = "viewer"
     guest = "guest"
 
+# Response genérica
+
 class PaginatedResponse(BaseModel, Generic[T]):
     items: List[T]
     total: int
 
-# Categories=
+# Categories
 
 class CategoryBase(BaseModel):
     name: str
     description: Optional[str] = None
     discount_percentage: Optional[float] = None 
+
     class Config:
         from_attributes = True
 
@@ -28,7 +33,7 @@ class CategoryCreate(CategoryBase):
     description: Optional[str] = None
     discount_percentage: Optional[float] = None
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def check_name_or_description(cls, values):
         name = values.get('name')
         description = values.get('description')
@@ -36,7 +41,7 @@ class CategoryCreate(CategoryBase):
         if not name and not description:
             raise ValueError('Pelo menos nome ou descrição deve ser fornecido.')
         return values
-    
+
 class Category(BaseModel):
     id: int
     name: str
@@ -54,15 +59,6 @@ class CategoryName(BaseModel):
 
     class Config:
         from_attributes = True
-        
-@root_validator(pre=True)
-def check_category_id(cls, values):
-    category_id = values.get('category_id', None)
-
-    if category_id is not None and category_id <= 0:
-        raise ValueError("O campo 'category_id' deve ser um valor válido.")
-    
-    return values
 
 class ProductBase(BaseModel):
     name: str
@@ -74,12 +70,17 @@ class ProductBase(BaseModel):
     class Config:
         from_attributes = True
 
-class ProductCreate(BaseModel):
-    name: str  # Required
-    description: Optional[str] = None
-    price: Optional[float] = None
-    category_id: Optional[int] = None
-    brand: Optional[str] = None
+    @model_validator(mode='before')
+    def check_category_id(cls, values):
+        category_id = values.get('category_id')
+
+        if category_id is not None and category_id <= 0:
+            raise ValueError("O campo 'category_id' deve ser um valor válido.")
+        
+        return values
+
+class ProductCreate(ProductBase):
+    pass
 
 class Product(BaseModel):
     id: int
@@ -110,6 +111,7 @@ class SaleBase(BaseModel):
     quantity: int
     total_price: float
     date: datetime
+
     class Config:
         from_attributes = True
 
@@ -125,7 +127,7 @@ class SaleWithProfit(Sale):
 # Users
 
 class UserBase(BaseModel):
-    email: str = Field(..., example="email@domain.com")
+    email: EmailStr = Field(..., example="email@domain.com")
     username: str = Field(..., example="admin")
     role: RoleEnum = RoleEnum.viewer
     created_at: datetime = Field(default_factory=datetime.now)
@@ -139,12 +141,17 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
     role: Optional[str] = None
 
-class User(UserBase):
+class User(BaseModel):
     id: int
+    email: str
+    username: str
     hashed_password: str
+    role: RoleEnum
+    created_at: datetime
+
     class Config:
         from_attributes = True
-        
+
 class LoginRequest(BaseModel):
     username: Optional[str] = None
     email: Optional[str] = None
@@ -163,9 +170,9 @@ class PriceHistoryBase(BaseModel):
     price: float
     date: datetime
     reason: Optional[str] = None
+
     class Config:
         from_attributes = True
 
 class PriceHistory(PriceHistoryBase):
     id: int
-
