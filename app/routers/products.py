@@ -1,3 +1,4 @@
+import logging
 from fastapi import APIRouter, Depends, UploadFile, HTTPException, Query
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import asc, desc
@@ -12,6 +13,7 @@ router = APIRouter(prefix="/products", tags=["products"])
 @router.get("", response_model=schemas.PaginatedResponse[schemas.Product])
 def get_products(
     db: Session = Depends(get_db),
+    page: int = 1,
     category_id: int = Query(None),
     title: str = Query(None),
     sort: str = Query("asc", enum=["asc", "desc"]),
@@ -19,6 +21,8 @@ def get_products(
     skip: int = Query(0, ge=0),
     limit: int = Query(10, ge=1)
 ):
+    logging.info(f"Pagination parameters - skip: {skip}, limit: {limit}")
+
     query = db.query(models.Product).options(joinedload(models.Product.category))
 
     if category_id is not None:
@@ -36,7 +40,21 @@ def get_products(
     sort_column = sort_column_map.get(sort_by, models.Product.name)
     query = query.order_by(desc(sort_column) if sort == "desc" else asc(sort_column))
 
-    products, total = paginate(query, skip, limit)
+    total = db.query(models.Product.id).count()
+
+    # Garantir que o valor de page seja pelo menos 1
+    if page < 1:
+        page = 1
+
+    # Calcular o valor de skip corretamente
+    skip = (page - 1) * limit
+    logging.info(f"Corrected skip value: {skip}")
+
+    products, _ = paginate(query, skip, limit)
+
+    logging.info(f"Total products: {total}, Products returned: {len(products)}")
+
+    logging.info(f"Generated SQL Query: {str(query)}")
 
     return schemas.PaginatedResponse(
         items=products,
