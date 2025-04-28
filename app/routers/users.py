@@ -32,7 +32,15 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return db_user
+
+    return schemas.User(
+        id=db_user.id,
+        email=db_user.email,
+        username=db_user.username,
+        hashed_password=db_user.password,
+        role=db_user.role,
+        created_at=db_user.created_at
+    )
 
 # Recuperar usuários
 @router.get("", response_model=PaginatedResponse[schemas.User])
