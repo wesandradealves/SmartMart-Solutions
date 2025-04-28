@@ -63,27 +63,43 @@ def create_product(product: schemas.ProductBase, db: Session = Depends(get_db)):
 
 
 @router.put("/{product_id}", response_model=schemas.Product)
-def update_product(product_id: int, updated_product: schemas.ProductBase, db: Session = Depends(get_db)):
+def update_product(
+    product_id: int,
+    updated_product: schemas.ProductCreate = None,
+    db: Session = Depends(get_db)
+):
     product = db.query(models.Product).filter(models.Product.id == product_id).first()
     if not product:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
+    
+    if not updated_product:
+        raise HTTPException(status_code=400, detail="Nenhum dado foi fornecido para atualização.")
 
-    normalized_name = updated_product.name.strip().lower()
+    if updated_product.name:
+        normalized_name = updated_product.name.strip().lower()
+        existing_product = db.query(models.Product).filter(
+            models.Product.id != product_id, 
+            models.Product.name.ilike(normalized_name)
+        ).first()
+        
+        if existing_product:
+            raise HTTPException(status_code=400, detail="Já existe outro produto com esse nome")
 
-    existing_product = db.query(models.Product).filter(
-        models.Product.id != product_id,  
-        models.Product.name.ilike(normalized_name)
-    ).first()
+        product.name = updated_product.name.strip()
 
-    if existing_product:
-        raise HTTPException(status_code=400, detail="Já existe outro produto com esse nome")
+    if updated_product.description is not None:
+        product.description = updated_product.description
 
-    for key, value in updated_product.dict().items():
-        setattr(product, key, value)
+    if updated_product.price is not None:
+        product.price = updated_product.price
+
+    if updated_product.category_id is not None:
+        product.category_id = updated_product.category_id
 
     db.commit()
     db.refresh(product)
     return product
+
 
 
 @router.delete("/{category_id}")
