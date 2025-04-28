@@ -1,5 +1,5 @@
 from typing import Optional, List
-from fastapi import APIRouter, Depends, HTTPException, Query, status, Cookie, Response
+from fastapi import APIRouter, Depends, HTTPException, Query, status, Cookie, Response, UploadFile
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import asc, desc
@@ -164,3 +164,8 @@ def get_roles():
     Retorna a lista de roles disponíveis no sistema.
     """
     return [role.value for role in models.RoleEnum]
+
+@router.post("/upload-csv")
+def upload_users_csv(file: UploadFile, db: Session = Depends(get_db)):
+    from app.services.csv_importer import import_users_csv
+    return import_users_csv(file, db)
