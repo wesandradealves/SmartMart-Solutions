@@ -6,6 +6,7 @@ import io
 
 from app.database import get_db
 from app import models
+from app.models.models import Product, Sale
 
 router = APIRouter(prefix="/export", tags=["export"])
 
@@ -20,13 +21,22 @@ def generate_csv(data, headers):
 
 @router.get("/products")
 def export_products_csv(db: Session = Depends(get_db)):
-    products = db.query(models.Product).all()
+    # Query the Product model to fetch all products
+    products = db.query(Product).all()
+
+    # Define the headers for the CSV file
     headers = ["id", "name", "description", "price", "category_id", "brand"]
-    return StreamingResponse(generate_csv(products, headers), media_type="text/csv", headers={"Content-Disposition": "attachment; filename=products.csv"})
+
+    # Generate the CSV file using the generate_csv function
+    return StreamingResponse(
+        generate_csv(products, headers),
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=products.csv"}
+    )
 
 @router.get("/sales")
 def export_sales_csv(db: Session = Depends(get_db)):
-    sales = db.query(models.Sale).all()
+    sales = db.query(Sale).all()
     headers = ["id", "product_id", "quantity", "total_price", "date"]
     return StreamingResponse(generate_csv(sales, headers), media_type="text/csv", headers={"Content-Disposition": "attachment; filename=sales.csv"})
 
@@ -38,6 +48,6 @@ def export_categories_csv(db: Session = Depends(get_db)):
 
 @router.get("/sales_with_profit")
 def export_sales_with_profit_csv(db: Session = Depends(get_db)):
-    sales = db.query(models.Sale).all()
+    sales = db.query(Sale).all()
     headers = ["id", "product_id", "quantity", "total_price", "date", "profit"]
     return StreamingResponse(generate_csv(sales, headers), media_type="text/csv", headers={"Content-Disposition": "attachment; filename=sales_with_profit.csv"})
