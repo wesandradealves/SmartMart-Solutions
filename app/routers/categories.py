@@ -48,6 +48,9 @@ def create_category(category: schemas.CategoryCreate, db: Session = Depends(get_
     if existing_category:
         raise HTTPException(status_code=400, detail="Categoria com o mesmo nome já existe")
 
+    if category.discount_percentage is not None and (category.discount_percentage < 0 or category.discount_percentage > 100):
+        raise HTTPException(status_code=400, detail="O campo 'discount_percentage' deve estar entre 0 e 100")
+
     db_category = models.Category(**category.dict())
     db.add(db_category)
     db.commit()

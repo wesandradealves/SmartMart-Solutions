@@ -37,9 +37,15 @@ class CategoryCreate(CategoryBase):
             raise ValueError('Pelo menos nome ou descrição deve ser fornecido.')
         return values
     
-class Category(CategoryBase):
+class Category(BaseModel):
     id: int
-    total_products: Optional[int] = None 
+    name: str
+    description: Optional[str] = None 
+    discount_percentage: float
+    total_products: Optional[int] = None
+
+    class Config:
+        from_attributes = True
 
 # Products
 
