@@ -109,7 +109,7 @@ def upload_csv(file: UploadFile, db: Session = Depends(get_db)):
 @router.put("/categories/{category_id}/discount")
 def update_category_discount(
     category_id: int,
-    discount_percentage: float,
+    discount_percentage: float = Query(..., ge=0, le=100), 
     db: Session = Depends(get_db)
 ):
     category = db.query(models.Category).filter(models.Category.id == category_id).first()
@@ -125,6 +125,7 @@ def update_category_discount(
     db.commit()
 
     return {
+        "success": True,
         "message": "Desconto atualizado com sucesso",
         "discount_percentage": discount_percentage,
         "category_id": category_id,
@@ -139,7 +140,6 @@ def update_category_discount(
         ]
     }
 
-
 def update_product_prices(db: Session, category_id: int):
     category = db.query(models.Category).filter(models.Category.id == category_id).first()
     if not category:
@@ -149,11 +149,16 @@ def update_product_prices(db: Session, category_id: int):
 
     for product in products:
         discount_amount = product.price * (category.discount_percentage / 100)
-        product.price -= discount_amount
+        new_price = product.price - discount_amount
+        if new_price < 0:
+            new_price = 0 
 
-        add_price_history(db, product.id, product.price)
+        product.price = new_price
+
+        add_price_history(db, product.id, new_price)
 
     db.commit()
+
 
 def add_price_history(db: Session, product_id: int, new_price: float, reason: str = None):
     price_history = models.PriceHistory(
