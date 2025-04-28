@@ -8,8 +8,8 @@ class Category(Base):
     __tablename__ = "categories"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True)
-    description = Column(String, nullable=True)  
-    discount_percentage = Column(Float, default=0.0)
+    description = Column(String, nullable=True) 
+    discount_percentage = Column(Float, nullable=True)
     products = relationship("Product", back_populates="category")
 
     def __repr__(self):
@@ -19,10 +19,10 @@ class Product(Base):
     __tablename__ = "products"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
-    description = Column(String)
-    price = Column(Float)
-    category_id = Column(Integer, ForeignKey("categories.id"))
-    brand = Column(String)
+    description = Column(String, nullable=True)
+    price = Column(Float, nullable=True)
+    category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
+    brand = Column(String, nullable=True)
     category = relationship("Category", back_populates="products")
     price_history = relationship("PriceHistory", back_populates="product")
     

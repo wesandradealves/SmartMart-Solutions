@@ -65,23 +65,20 @@ def create_product(product: schemas.ProductBase, db: Session = Depends(get_db)):
 @router.put("/{product_id}", response_model=schemas.Product)
 def update_product(
     product_id: int,
-    updated_product: schemas.ProductCreate = None,
+    updated_product: schemas.ProductUpdate,  
     db: Session = Depends(get_db)
 ):
     product = db.query(models.Product).filter(models.Product.id == product_id).first()
     if not product:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
-    
-    if not updated_product:
-        raise HTTPException(status_code=400, detail="Nenhum dado foi fornecido para atualização.")
 
-    if updated_product.name:
+    if updated_product.name is not None:
         normalized_name = updated_product.name.strip().lower()
         existing_product = db.query(models.Product).filter(
             models.Product.id != product_id, 
             models.Product.name.ilike(normalized_name)
         ).first()
-        
+
         if existing_product:
             raise HTTPException(status_code=400, detail="Já existe outro produto com esse nome")
 

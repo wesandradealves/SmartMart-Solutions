@@ -18,13 +18,13 @@ class PaginatedResponse(BaseModel, Generic[T]):
 
 class CategoryBase(BaseModel):
     name: str
-    description: str
-    discount_percentage: float
+    description: Optional[str] = None
+    discount_percentage: Optional[float] = None 
     class Config:
         from_attributes = True
 
 class CategoryCreate(CategoryBase):
-    name: Optional[str] = None
+    name: str 
     description: Optional[str] = None
     discount_percentage: Optional[float] = None
 
@@ -40,8 +40,8 @@ class CategoryCreate(CategoryBase):
 class Category(BaseModel):
     id: int
     name: str
-    description: Optional[str] = None 
-    discount_percentage: float
+    description: Optional[str] = None
+    discount_percentage: Optional[float] = None
     total_products: Optional[int] = None
 
     class Config:
@@ -65,38 +65,43 @@ def check_category_id(cls, values):
     return values
 
 class ProductBase(BaseModel):
-    name: str = Field(..., example="Smartphone Galaxy A15")
-    description: str = Field(..., example="Smartphone com tela de 6,5 polegadas")
-    price: float = Field(..., gt=0, example=1299.99)
-    category_id: Optional[int] = Field(None, example=2)  
-    brand: str = Field(..., example="Samsung")
-
-    class Config:
-        from_attributes = True
-
-class Product(ProductBase):
-    id: int
-    category: Optional[CategoryName] = None 
+    name: str
+    description: Optional[str] = None  
+    price: Optional[float] = None  
+    category_id: Optional[int] = None  
+    brand: Optional[str] = None  
 
     class Config:
         from_attributes = True
 
 class ProductCreate(BaseModel):
+    name: str  # Required
+    description: Optional[str] = None
+    price: Optional[float] = None
+    category_id: Optional[int] = None
+    brand: Optional[str] = None
+
+class Product(BaseModel):
+    id: int
+    name: str
+    description: Optional[str] = None
+    price: Optional[float] = None
+    category_id: Optional[int] = None
+    brand: Optional[str] = None
+    category: Optional[CategoryName] = None 
+
+    class Config:
+        from_attributes = True
+
+class ProductUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     price: Optional[float] = None
-    category_id: Optional[int] = None  
-    category: Optional[dict] = None 
+    category_id: Optional[int] = None
     brand: Optional[str] = None
 
-    @root_validator(pre=True)
-    def check_category_id(cls, values):
-        category_id = values.get('category_id', None)
-
-        if category_id is not None and category_id <= 0:
-            raise ValueError("O campo 'category_id' deve ser um valor válido.")
-        
-        return values
+    class Config:
+        from_attributes = True
 
 # Sales
 
