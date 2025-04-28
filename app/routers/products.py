@@ -104,22 +104,16 @@ def update_product(
     return product
 
 
+@router.delete("/{product_id}")
+def delete_product(product_id: int, db: Session = Depends(get_db)):
+    product = db.query(models.Product).filter(models.Product.id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
 
-
-@router.delete("/{category_id}")
-def delete_category(category_id: int, db: Session = Depends(get_db)):
-    category = db.query(models.Category).filter(models.Category.id == category_id).first()
-    if not category:
-        raise HTTPException(status_code=404, detail="Categoria não encontrada")
-
-    db.query(models.Product).filter(models.Product.category_id == category_id).update(
-        {models.Product.category_id: None}, synchronize_session=False
-    )
-    
-    db.delete(category)
+    db.delete(product)
     db.commit()
-    
-    return {"detail": "Categoria deletada com sucesso, e produtos associados tiveram a categoria removida"}
+
+    return {"detail": "Produto deletado com sucesso"}
 
 
 @router.post("/upload-csv")

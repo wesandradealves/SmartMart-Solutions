@@ -62,14 +62,18 @@ class ProductBase(BaseModel):
     name: str = Field(..., example="Smartphone Galaxy A15")
     description: str = Field(..., example="Smartphone com tela de 6,5 polegadas")
     price: float = Field(..., gt=0, example=1299.99)
-    category_id: int = Field(..., example=2)
+    category_id: Optional[int] = Field(None, example=2)  
     brand: str = Field(..., example="Samsung")
+
     class Config:
         from_attributes = True
 
 class Product(ProductBase):
     id: int
-    category: CategoryName
+    category: Optional[CategoryName] = None 
+
+    class Config:
+        from_attributes = True
 
 class ProductCreate(BaseModel):
     name: Optional[str] = None
