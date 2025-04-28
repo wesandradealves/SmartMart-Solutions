@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr, model_validator, root_validator
-from typing import Optional, Generic, TypeVar, List
+from typing import Dict, Optional, Generic, TypeVar, List
 from datetime import datetime
 from enum import Enum  
 
@@ -48,6 +48,15 @@ class CategoryName(BaseModel):
 
     class Config:
         from_attributes = True
+        
+@root_validator(pre=True)
+def check_category_id(cls, values):
+    category_id = values.get('category_id', None)
+
+    if category_id is not None and category_id <= 0:
+        raise ValueError("O campo 'category_id' deve ser um valor válido.")
+    
+    return values
 
 class ProductBase(BaseModel):
     name: str = Field(..., example="Smartphone Galaxy A15")
@@ -62,8 +71,21 @@ class Product(ProductBase):
     id: int
     category: CategoryName
 
-class ProductCreate(ProductBase):
-    pass
+class ProductCreate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[float] = None
+    category_id: Optional[int] = None  
+    category: Optional[dict] = None 
+
+    @root_validator(pre=True)
+    def check_category_id(cls, values):
+        category_id = values.get('category_id', None)
+
+        if category_id is not None and category_id <= 0:
+            raise ValueError("O campo 'category_id' deve ser um valor válido.")
+        
+        return values
 
 # Sales
 
