@@ -96,9 +96,13 @@ def update_product(
     if updated_product.category_id is not None:
         product.category_id = updated_product.category_id
 
+    if updated_product.brand is not None:
+        product.brand = updated_product.brand.strip()
+
     db.commit()
     db.refresh(product)
     return product
+
 
 
 

@@ -77,6 +77,7 @@ class ProductCreate(BaseModel):
     price: Optional[float] = None
     category_id: Optional[int] = None  
     category: Optional[dict] = None 
+    brand: Optional[str] = None
 
     @root_validator(pre=True)
     def check_category_id(cls, values):
