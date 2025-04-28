@@ -50,8 +50,12 @@ def get_users(
     sort_by: str = Query("username", enum=["username", "email", "role", "created_at"]),
     skip: int = Query(0, ge=0),
     limit: int = Query(10, ge=1),
+    role: Optional[models.RoleEnum] = Query(None, description="Filtrar por role")
 ):
     query = db.query(models.User)
+
+    if role:
+        query = query.filter(models.User.role == role)
 
     sort_column_map = {
         "username": models.User.username,
