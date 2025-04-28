@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, Query, status, Cookie, Response
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -145,3 +145,10 @@ def logout(response: Response, session_token: Optional[str] = Cookie(None)):
 
     response.delete_cookie("session_token", path="/")
     return {"message": "Logout bem-sucedido"}
+
+@router.get("/roles", response_model=List[str])
+def get_roles():
+    """
+    Retorna a lista de roles disponíveis no sistema.
+    """
+    return [role.value for role in models.RoleEnum]
