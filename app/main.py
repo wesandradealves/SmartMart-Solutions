@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 import os
 
-# Load environment variables from .env file
 load_dotenv()
 
 import logging
@@ -62,7 +61,6 @@ app.include_router(users.router)
 app.include_router(price_history.router)
 
 if __name__ == "__main__":
-    # Example usage of environment variables
     smtp_user = os.getenv("SMTP_USER")
     print(f"SMTP User: {smtp_user}")
 
