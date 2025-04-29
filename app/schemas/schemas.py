@@ -52,6 +52,14 @@ class Category(BaseModel):
     class Config:
         from_attributes = True
 
+class CategoryUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    discount_percentage: Optional[float] = None
+
+    class Config:
+        from_attributes = True
+
 # Products
 
 class CategoryName(BaseModel):
@@ -126,6 +134,15 @@ class SaleWithProfit(Sale):
 
 class SaleWithProductName(Sale):
     product_name: str
+
+class SaleUpdate(BaseModel):
+    product_id: Optional[int] = None
+    quantity: Optional[int] = None
+    total_price: Optional[float] = None
+    date: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
 
 # Users
 

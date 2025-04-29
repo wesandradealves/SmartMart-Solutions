@@ -25,11 +25,12 @@ class Product(Base):
     brand = Column(String, nullable=True)
     category = relationship("Category", back_populates="products")
     price_history = relationship("PriceHistory", back_populates="product")
-    
+    sales = relationship("Sale", cascade="all, delete", passive_deletes=True)
+
 class Sale(Base):
     __tablename__ = "sales"
     id = Column(Integer, primary_key=True, index=True)
-    product_id = Column(Integer, ForeignKey("products.id"))
+    product_id = Column(Integer, ForeignKey("products.id", ondelete="CASCADE"))
     quantity = Column(Integer)
     total_price = Column(Float)
     date = Column(DateTime)
