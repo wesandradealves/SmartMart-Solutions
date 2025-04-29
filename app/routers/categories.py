@@ -60,34 +60,27 @@ def create_category(category: schemas.CategoryCreate, db: Session = Depends(get_
 @router.put("/{category_id}", response_model=schemas.Category)
 def update_category(
     category_id: int,
-    updated_category: schemas.CategoryCreate = None,
+    updated_category: schemas.CategoryUpdate = None,
     db: Session = Depends(get_db)
 ):
     category = db.query(models.Category).filter(models.Category.id == category_id).first()
     if not category:
         raise HTTPException(status_code=404, detail="Categoria não encontrada")
-    
     if not updated_category:
         raise HTTPException(status_code=400, detail="Nenhum dado foi fornecido para atualização.")
-
-    if updated_category.name:
+    if updated_category.name is not None:
         normalized_name = updated_category.name.strip().lower()
         existing_category = db.query(models.Category).filter(
-            models.Category.id != category_id, 
+            models.Category.id != category_id,
             models.Category.name.ilike(normalized_name)
         ).first()
-        
         if existing_category:
             raise HTTPException(status_code=400, detail="Já existe outra categoria com esse nome")
-
         category.name = updated_category.name.strip()
-
     if updated_category.description is not None:
         category.description = updated_category.description
-
     if updated_category.discount_percentage is not None:
         category.discount_percentage = updated_category.discount_percentage
-
     db.commit()
     db.refresh(category)
     return category

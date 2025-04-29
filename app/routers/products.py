@@ -7,6 +7,7 @@ from app.schemas import schemas
 from app.services import csv_importer
 from app.database import get_db
 from app.utils.pagination import paginate
+from remove_orphan_sales import remove_orphan_sales
 
 router = APIRouter(prefix="/products", tags=["products"])
 
@@ -125,8 +126,13 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
     if not product:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
 
+    # Deleta todas as vendas relacionadas a este produto
+    db.query(models.Sale).filter(models.Sale.product_id == product_id).delete()
     db.delete(product)
     db.commit()
+
+    # Remove vendas órfãs após deletar o produto
+    remove_orphan_sales()
 
     return {"detail": "Produto deletado com sucesso"}
 

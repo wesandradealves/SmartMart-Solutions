@@ -67,10 +67,10 @@ def create_sale(sale: schemas.SaleCreate, db: Session = Depends(get_db)):
     db.refresh(db_sale)
     return db_sale
 
-@router.put("/{sale_id}", response_model=schemas.Sale)
+@router.put("/{sale_id}")
 def update_sale(
     sale_id: int,
-    updated_sale: schemas.SaleCreate,
+    updated_sale: schemas.SaleUpdate,
     db: Session = Depends(get_db)
 ):
     sale = db.query(models.Sale).filter(models.Sale.id == sale_id).first()
@@ -82,7 +82,7 @@ def update_sale(
 
     db.commit()
     db.refresh(sale)
-    return sale
+    return {"message": "Venda atualizada com sucesso", "sale": sale}
 
 @router.delete("/{sale_id}")
 def delete_sale(sale_id: int, db: Session = Depends(get_db)):
