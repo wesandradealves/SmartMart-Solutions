@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Query
 import logging
 
-# Adicionar logs detalhados para depuração
 def paginate(query: Query, skip: int = 0, limit: int = 10):
     logging.info(f"Paginate called with skip: {skip}, limit: {limit}")
     total_query = query.order_by(None).with_entities(query.column_descriptions[0]['entity'].id)

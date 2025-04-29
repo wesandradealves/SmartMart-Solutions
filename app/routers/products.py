@@ -43,11 +43,9 @@ def get_products(
 
     total = db.query(models.Product.id).count()
 
-    # Garantir que o valor de page seja pelo menos 1
     if page < 1:
         page = 1
 
-    # Calcular o valor de skip corretamente
     skip = (page - 1) * limit
     logging.info(f"Corrected skip value: {skip}")
 
@@ -217,7 +215,7 @@ def add_price_history(db: Session, product_id: int, new_price: float, reason: st
         db.refresh(price_history)
         return price_history
     except Exception as e:
-        print("ERRO AO INSERIR PRICE HISTORY:", e)  # Adicionado para exibir o erro no console
+        print("ERRO AO INSERIR PRICE HISTORY:", e) 
         logging.error(f"Erro ao adicionar price history: {e}")
         db.rollback()
         return None

@@ -115,8 +115,4 @@ def get_total_profit(
     days: int = Query(365, ge=1),
     product_id: int = Query(None)
 ):
-    """
-    Retorna o lucro total para um período de tempo especificado (em dias).
-    Opcionalmente, pode filtrar por um produto específico.
-    """
     return calculate_total_profit(db, days=days, product_id=product_id)
