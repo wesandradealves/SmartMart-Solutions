@@ -6,6 +6,8 @@ API para gerenciamento interno de produtos, categorias e vendas da SmartMart Sol
 
 - Backend [https://github.com/wesandradealves/SmartMart-Solutions](https://github.com/wesandradealves/SmartMart-Solutions) 
 
+- Swagger [{{base_url}}/docs]({{base_url}}/docs) 
+
 ## Tecnologias
 
 - **FastAPI** para construção da API.
