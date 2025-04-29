@@ -139,7 +139,11 @@ def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
     token = security.create_session_token(db_user)
     response_message = f"✅ Você está logado como {db_user.username}"
 
-    response = JSONResponse(content={"message": response_message, "token": token})
+    response = JSONResponse(content={
+        "message": response_message,
+        "token": token,
+        "username": db_user.username 
+    })
     response.set_cookie(key="session_token", value=token, httponly=True, max_age=3600)
 
     return response
