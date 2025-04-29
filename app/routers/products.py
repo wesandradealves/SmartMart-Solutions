@@ -109,6 +109,8 @@ def update_product(
     if updated_product.price is not None:
         product.price = updated_product.price
 
+        add_price_history(db, product_id, updated_product.price, reason="Preço atualizado manualmente")
+
     if updated_product.category_id is not None:
         product.category_id = updated_product.category_id
 
@@ -126,12 +128,10 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
     if not product:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
 
-    # Deleta todas as vendas relacionadas a este produto
     db.query(models.Sale).filter(models.Sale.product_id == product_id).delete()
     db.delete(product)
     db.commit()
 
-    # Remove vendas órfãs após deletar o produto
     remove_orphan_sales()
 
     return {"detail": "Produto deletado com sucesso"}
@@ -182,11 +182,15 @@ def update_product_prices(db: Session, category_id: int):
 
     products = db.query(models.Product).filter(models.Product.category_id == category_id).all()
 
+    logging.info(f"Updating product prices for category_id: {category_id}")
+    logging.info(f"Category discount percentage: {category.discount_percentage}")
     for product in products:
+        logging.info(f"Processing product_id: {product.id}, current price: {product.price}")
         discount_amount = product.price * (category.discount_percentage / 100)
         new_price = product.price - discount_amount
         if new_price < 0:
             new_price = 0 
+        logging.info(f"New price for product_id: {product.id} will be: {new_price}")
 
         product.price = new_price
 
@@ -196,12 +200,24 @@ def update_product_prices(db: Session, category_id: int):
 
 
 def add_price_history(db: Session, product_id: int, new_price: float, reason: str = None):
-    price_history = models.PriceHistory(
-        product_id=product_id,
-        price=new_price,
-        reason=reason
-    )
-    db.add(price_history)
-    db.commit()
-    db.refresh(price_history)
-    return price_history
+    logging.info(f"Attempting to add price history: product_id={product_id}, new_price={new_price}, reason={reason}")
+    if not db.query(models.Product).filter(models.Product.id == product_id).first():
+        logging.error(f"Product with product_id={product_id} does not exist. Cannot add price history.")
+        return None
+
+    logging.info("Product exists. Proceeding to add price history.")
+    try:
+        price_history = models.PriceHistory(
+            product_id=product_id,
+            price=new_price,
+            reason=reason
+        )
+        db.add(price_history)
+        db.commit()
+        db.refresh(price_history)
+        return price_history
+    except Exception as e:
+        print("ERRO AO INSERIR PRICE HISTORY:", e)  # Adicionado para exibir o erro no console
+        logging.error(f"Erro ao adicionar price history: {e}")
+        db.rollback()
+        return None

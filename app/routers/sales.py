@@ -6,6 +6,7 @@ from app.schemas import schemas
 from app.database import get_db
 from app.utils.pagination import paginate
 from app.services.csv_importer import import_sales_csv
+from app.services.profit_service import calculate_total_profit
 from fastapi.responses import StreamingResponse
 import csv
 import io
@@ -107,3 +108,15 @@ def export_sales_csv(db: Session = Depends(get_db)):
         media_type="text/csv",
         headers={"Content-Disposition": "attachment; filename=sales.csv"}
     )
+
+@router.get("/profit/total")
+def get_total_profit(
+    db: Session = Depends(get_db),
+    days: int = Query(365, ge=1),
+    product_id: int = Query(None)
+):
+    """
+    Retorna o lucro total para um período de tempo especificado (em dias).
+    Opcionalmente, pode filtrar por um produto específico.
+    """
+    return calculate_total_profit(db, days=days, product_id=product_id)
