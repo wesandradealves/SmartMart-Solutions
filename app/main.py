@@ -1,3 +1,9 @@
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
 import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -54,4 +60,9 @@ app.include_router(sales.router)
 app.include_router(export.router)
 app.include_router(users.router)
 app.include_router(price_history.router)
+
+if __name__ == "__main__":
+    # Example usage of environment variables
+    smtp_user = os.getenv("SMTP_USER")
+    print(f"SMTP User: {smtp_user}")
 
