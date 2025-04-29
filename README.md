@@ -8,6 +8,8 @@ API para gerenciamento interno de produtos, categorias e vendas da SmartMart Sol
 
 - Swagger [{{base_url}}/docs]({{base_url}}/docs) (http://localhost:8000)
 
+- Postman Collection [https://raw.githubusercontent.com/wesandradealves/SmartMart-Solutions/refs/heads/master/SmartMart%20API.postman_collection.json] (https://raw.githubusercontent.com/wesandradealves/SmartMart-Solutions/refs/heads/master/SmartMart%20API.postman_collection.json)
+
 ## Tecnologias
 
 - **FastAPI** para construção da API.
