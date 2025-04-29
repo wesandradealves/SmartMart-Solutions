@@ -1,5 +1,5 @@
 from typing import Optional, List
-from fastapi import APIRouter, Depends, HTTPException, Query, status, Cookie, Response, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, Query, status, Cookie, Response, UploadFile, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import asc, desc
@@ -9,6 +9,8 @@ from app.schemas import schemas
 from app.services import security
 from app.utils.pagination import paginate
 from app.schemas.schemas import PaginatedResponse
+from app.services.email_service import send_email
+from datetime import datetime
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -116,7 +118,7 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
 
 # Login e Logout
 @router.post("/login")
-def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
+def login(user: schemas.LoginRequest, request: Request, db: Session = Depends(get_db)):
     db_user = None
 
     if user.email:
@@ -128,10 +130,10 @@ def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
     if not db_user:
         raise HTTPException(status_code=401, detail="Credenciais inválidas")
 
-    if not security.pwd_context.identify(db_user.password):  
-        db_user.password = security.hash_password(db_user.password) 
-        db.commit()  
-        print("Senha foi re-hashada.")  
+    if not security.pwd_context.identify(db_user.password):
+        db_user.password = security.hash_password(db_user.password)
+        db.commit()
+        print("Senha foi re-hashada.")
 
     if not security.verify_password(user.password, db_user.password):
         raise HTTPException(status_code=401, detail="Credenciais inválidas")
@@ -139,10 +141,24 @@ def login(user: schemas.LoginRequest, db: Session = Depends(get_db)):
     token = security.create_session_token(db_user)
     response_message = f"✅ Você está logado como {db_user.username}"
 
+    # Obter IP e data/hora do login
+    client_ip = request.client.host
+    login_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+
+    # Enviar email de notificação
+    try:
+        send_email(
+            to_email=db_user.email,
+            subject="Login bem-sucedido",
+            body=f"Olá {db_user.username},\n\nVocê logou às {login_time} com o IP {client_ip}.\n\nSe não foi você, por favor, entre em contato com o suporte."
+        )
+    except Exception as e:
+        print(f"Erro ao enviar email: {e}")
+
     response = JSONResponse(content={
         "message": response_message,
         "token": token,
-        "username": db_user.username 
+        "username": db_user.username
     })
     response.set_cookie(key="session_token", value=token, httponly=True, max_age=3600)
 

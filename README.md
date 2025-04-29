@@ -924,6 +924,56 @@ Essas restrições garantem maior segurança e controle sobre as operações adm
 - Senhas são armazenadas de forma segura usando bcrypt.
 - Tokens de sessão são gerados com itsdangerous e têm tempo de expiração (1h).
 
+## Feature: Disparo de E-mail Após Login
+
+### Descrição
+Agora, o sistema envia um e-mail de notificação para o usuário após um login bem-sucedido. O e-mail contém informações como o endereço IP e a data/hora do login, garantindo maior segurança e transparência para os usuários.
+
+### Configuração
+Para habilitar o envio de e-mails, é necessário configurar as variáveis de ambiente no arquivo `.env`. Siga os passos abaixo:
+
+1. Crie um arquivo `.env` na raiz do projeto (caso ainda não exista).
+2. Adicione as seguintes variáveis ao arquivo `.env`:
+
+```
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=seu-email
+SMTP_PASSWORD=sua-senha
+```
+
+- **SMTP_SERVER**: Endereço do servidor SMTP (exemplo: `smtp.gmail.com` para Gmail).
+- **SMTP_PORT**: Porta do servidor SMTP (exemplo: `587` para TLS).
+- **SMTP_USER**: E-mail usado para autenticação no servidor SMTP.
+- **SMTP_PASSWORD**: Senha do e-mail usado para autenticação.
+
+### Testando a Funcionalidade
+1. Certifique-se de que as variáveis de ambiente estão configuradas corretamente no arquivo `.env`.
+2. Inicie o backend com o comando:
+
+```
+uvicorn app.main:app --reload
+```
+
+3. Faça login utilizando um usuário existente.
+4. Verifique a caixa de entrada do e-mail configurado para receber a notificação de login.
+
+### Observação
+Certifique-se de que o e-mail configurado no `SMTP_USER` tem permissão para enviar e-mails pelo servidor SMTP escolhido. Para Gmail, pode ser necessário ativar o acesso de "apps menos seguros" ou configurar uma senha de aplicativo.
+
+### Como gerar uma senha de aplicativo no Gmail
+
+Para configurar o envio de e-mails no sistema, você precisará gerar uma senha de aplicativo no Gmail. Siga os passos abaixo:
+
+1. Acesse [Configurações de segurança do Google](https://myaccount.google.com/security).
+2. Certifique-se de que a **verificação em duas etapas** está ativada.
+3. Na seção **"Senhas de aplicativo"**, clique em **Gerar senha**.
+4. Escolha o aplicativo (por exemplo, "E-mail") e o dispositivo (por exemplo, "Computador Windows") para o qual deseja gerar a senha.
+5. Clique em **Gerar**.
+6. Copie a senha gerada e use-a no campo `SMTP_PASSWORD` do arquivo `.env`.
+
+Após configurar a senha de aplicativo, reinicie o backend para aplicar as alterações.
+
 ## Estrutura de Arquivos
 
 ```plaintext
