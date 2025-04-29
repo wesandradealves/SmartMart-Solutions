@@ -10,6 +10,8 @@ API para gerenciamento interno de produtos, categorias e vendas da SmartMart Sol
 
 - Postman Collection [https://raw.githubusercontent.com/wesandradealves/SmartMart-Solutions/refs/heads/master/SmartMart%20API.postman_collection.json] (https://raw.githubusercontent.com/wesandradealves/SmartMart-Solutions/refs/heads/master/SmartMart%20API.postman_collection.json)
 
+- Para logar, use o login default: admin/admin
+
 ## Tecnologias
 
 - **FastAPI** para construção da API.
