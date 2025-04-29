@@ -29,7 +29,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"price\": \"<number>\",\n  \"category_id\": \"<integer>\",\n  \"brand\": \"<string>\"\n}",
+									"raw": "{\n  \"brand\": \"Teste\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -37,20 +37,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/products/:product_id",
+									"raw": "{{baseUrl}}/products/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"products",
-										":product_id"
-									],
-									"variable": [
-										{
-											"key": "product_id",
-											"value": "<integer>",
-											"description": "(Required) "
-										}
+										"1"
 									]
 								}
 							},
@@ -279,7 +272,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/products?category_id=<integer>&title=<string>&sort=asc&sort_by=name&skip=0&limit=10",
+							"raw": "{{baseUrl}}/products?sort=asc&sort_by=id",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -288,28 +281,12 @@
 							],
 							"query": [
 								{
-									"key": "category_id",
-									"value": "<integer>"
-								},
-								{
-									"key": "title",
-									"value": "<string>"
-								},
-								{
 									"key": "sort",
 									"value": "asc"
 								},
 								{
 									"key": "sort_by",
-									"value": "name"
-								},
-								{
-									"key": "skip",
-									"value": "0"
-								},
-								{
-									"key": "limit",
-									"value": "10"
+									"value": "id"
 								}
 							]
 						}
@@ -680,6 +657,50 @@
 				},
 				{
 					"name": "Update Category Discount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>Product ID</th>\r",
+									"        <th>Name</th>\r",
+									"        <th>Price</th>\r",
+									"        <th>Category ID</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response.updated_products}}\r",
+									"        <tr>\r",
+									"            <td>{{product_id}}</td>\r",
+									"            <td>{{name}}</td>\r",
+									"            <td>{{price}}</td>\r",
+									"            <td>{{category_id}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -689,27 +710,20 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/products/categories/:category_id/discount?discount_percentage=<number>",
+							"raw": "{{baseUrl}}/products/categories/1/discount?discount_percentage=10",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"products",
 								"categories",
-								":category_id",
+								"1",
 								"discount"
 							],
 							"query": [
 								{
 									"key": "discount_percentage",
-									"value": "<number>",
-									"description": "(Required) "
-								}
-							],
-							"variable": [
-								{
-									"key": "category_id",
-									"value": "<integer>",
+									"value": "10",
 									"description": "(Required) "
 								}
 							]
@@ -838,7 +852,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"discount_percentage\": \"<number>\"\n}",
+									"raw": "{\n    \"name\": \"Televisores\",\n  \"description\": \"TVs de alta definição e tecnologia avançada\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -846,20 +860,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/categories/:category_id",
+									"raw": "{{baseUrl}}/categories/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"categories",
-										":category_id"
-									],
-									"variable": [
-										{
-											"key": "category_id",
-											"value": "<integer>",
-											"description": "(Required) "
-										}
+										"1"
 									]
 								}
 							},
@@ -1088,30 +1095,12 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/categories?sort_by=name&sort_order=asc&skip=0&limit=10",
+							"raw": "{{baseUrl}}/categories",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"categories"
-							],
-							"query": [
-								{
-									"key": "sort_by",
-									"value": "name"
-								},
-								{
-									"key": "sort_order",
-									"value": "asc"
-								},
-								{
-									"key": "skip",
-									"value": "0"
-								},
-								{
-									"key": "limit",
-									"value": "10"
-								}
 							]
 						}
 					},
@@ -1613,7 +1602,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/sales?sort_by=total_price&sort_order=asc&days=365&skip=0&limit=10",
+							"raw": "{{baseUrl}}/sales?sort_by=id&sort_order=desc&days=10&skip=5&limit=10",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -1623,20 +1612,19 @@
 							"query": [
 								{
 									"key": "sort_by",
-									"value": "total_price"
+									"value": "id"
 								},
 								{
 									"key": "sort_order",
-									"value": "asc"
+									"value": "desc"
 								},
 								{
 									"key": "days",
-									"value": "365",
-									"description": "Número de dias para considerar (padrão: últimos 365 dias)"
+									"value": "10"
 								},
 								{
 									"key": "skip",
-									"value": "0"
+									"value": "5"
 								},
 								{
 									"key": "limit",
@@ -2773,7 +2761,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"password\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<string>\"\n}",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
