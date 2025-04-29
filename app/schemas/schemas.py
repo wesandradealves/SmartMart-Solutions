@@ -124,6 +124,9 @@ class SaleCreate(SaleBase):
 class SaleWithProfit(Sale):
     profit: float
 
+class SaleWithProductName(Sale):
+    product_name: str
+
 # Users
 
 class UserBase(BaseModel):
