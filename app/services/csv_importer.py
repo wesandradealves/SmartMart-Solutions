@@ -1,6 +1,7 @@
 import pandas as pd
 from app.models import models
 from app.services.security import hash_password
+from datetime import datetime
 
 def import_products_csv(file, db):
     df = pd.read_csv(file.file)
@@ -41,14 +42,18 @@ def import_categories_csv(file, db):
     return {"message": "Categorias importadas com sucesso."}
 
 def import_sales_csv(file, db):
-    df = pd.read_csv(file.file)
-    for _, row in df.iterrows():
-        sale = models.Sale(
-            product_id=row["product_id"],
-            quantity=row["quantity"],
-            total_price=row["total_price"],
-            date=row["date"]
-        )
-        db.add(sale)
-    db.commit()
-    return {"message": "Vendas importadas com sucesso."}
+    try:
+        df = pd.read_csv(file.file)
+        for _, row in df.iterrows():
+            sale = models.Sale(
+                product_id=row["product_id"],
+                quantity=row["quantity"],
+                total_price=row["total_price"],
+                date=datetime.strptime(str(row["date"]), "%Y-%m-%d %H:%M:%S")
+            )
+            db.add(sale)
+        db.commit()
+        return {"message": "Vendas importadas com sucesso."}
+    except Exception as e:
+        db.rollback()
+        return {"error": str(e)}
